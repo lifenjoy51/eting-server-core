@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
  * <div>2. 적절한 우체통에 넣는다.</div>
  */
 @Component
-public abstract class StoryQueueHandler
+public abstract class StoryQueueConsumer
 {
 	/**
 	 */
@@ -32,7 +32,7 @@ public abstract class StoryQueueHandler
 	
 	/**
 	 */
-	public StoryQueueHandler(){
+	public StoryQueueConsumer(){
 		super();
 	}
 

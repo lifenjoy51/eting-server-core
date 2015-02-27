@@ -33,13 +33,13 @@ public class Incognito {
      * 여 F
      */
     @Column
-    private String gender;
+    private String gender = "X";
 
     /**
      * ex) 1988
      */
     @Column
-    private int birthYear;
+    private int birthYear = 0;
 
     /**
      */
