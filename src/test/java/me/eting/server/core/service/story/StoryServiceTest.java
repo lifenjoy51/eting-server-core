@@ -14,6 +14,7 @@ import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import javax.transaction.Transactional;
 import java.util.Date;
 import java.util.UUID;
 
@@ -52,6 +53,7 @@ public class StoryServiceTest {
     }
 
     @Test
+    @Transactional  //lazy-loading 에러나지 않게 하기 위해.
     public void testSave() throws Exception {
         //저장할 이야기.
         Story story = new Story();
