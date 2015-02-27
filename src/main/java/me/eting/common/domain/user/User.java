@@ -1,4 +1,4 @@
-package me.eting.server.core.domain.entity;
+package me.eting.common.domain.user;
 import lombok.Data;
 
 import javax.persistence.*;

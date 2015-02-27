@@ -1,8 +1,8 @@
 package me.eting.server.core.service.story.postbox;
 
 
-import me.eting.server.core.domain.entity.Device;
-import me.eting.server.core.domain.entity.Story;
+import me.eting.common.domain.user.Device;
+import me.eting.common.domain.story.Story;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

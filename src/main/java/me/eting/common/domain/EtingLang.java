@@ -1,4 +1,4 @@
-package me.eting.server.core.domain;
+package me.eting.common.domain;
 
 
 /**

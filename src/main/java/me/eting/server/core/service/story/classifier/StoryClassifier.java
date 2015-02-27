@@ -1,10 +1,10 @@
 package me.eting.server.core.service.story.classifier;
 
 
-import me.eting.server.core.domain.EtingLang;
-import me.eting.server.core.domain.EtingType;
-import me.eting.server.core.domain.entity.Envelope;
-import me.eting.server.core.domain.entity.Story;
+import me.eting.common.domain.EtingLang;
+import me.eting.common.domain.EtingType;
+import me.eting.common.domain.story.EnvelopedStory;
+import me.eting.common.domain.story.Story;
 
 /**
  * 이야기 분류기 추상 객체이다.
@@ -23,7 +23,7 @@ public abstract class StoryClassifier
 
 	/**
 	 */
-	public Envelope envelopStory(Story parameter) {
+	public EnvelopedStory envelopStory(Story parameter) {
         //TODO 1. 먼저 기기 유형을 검사해서 만든다.
         //TODO 2. 정상적인 내용인지 검사한다.
         //TODO 3. 특정 단어(정규식)을 포함했는지 검사한다.

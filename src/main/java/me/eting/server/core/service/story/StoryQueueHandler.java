@@ -1,7 +1,7 @@
 package me.eting.server.core.service.story;
 
 
-import me.eting.server.core.domain.entity.Envelope;
+import me.eting.common.domain.story.EnvelopedStory;
 import me.eting.server.core.service.story.classifier.StoryClassifierRegistry;
 import me.eting.server.core.service.story.postbox.PostboxRegistry;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,7 +53,7 @@ public abstract class StoryQueueHandler
 	 * 봉투(envelope)에 있는 정보를 통해 알맞은 우체통을 찾아 넣는다.
      * <div>중복처리를 여기서 하는게 맞는가?</div>
 	 */
-	public void putIntoPostbox(Envelope parameter) {
+	public void putIntoPostbox(EnvelopedStory parameter) {
 		// TODO implement me	
 	}
 	
@@ -61,7 +61,7 @@ public abstract class StoryQueueHandler
      * 기기 유형을 업데이트한다.
      * Envelope를 생성한 이후 Envelope의 유형에 맞게 기기유형을 바꾼다.
 	 */
-	public void updateDeviceType(Envelope parameter) {
+	public void updateDeviceType(EnvelopedStory parameter) {
 		// TODO implement me	
 	}
 	

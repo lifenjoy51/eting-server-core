@@ -1,8 +1,8 @@
 package me.eting.server.core.service.story.postbox;
 
 
-import me.eting.server.core.domain.EtingPostboxKey;
-import me.eting.server.core.domain.entity.Story;
+import me.eting.common.domain.EtingKey;
+import me.eting.common.domain.story.Story;
 
 /**
  * 우체통 추상 클래스이다.
@@ -13,11 +13,11 @@ import me.eting.server.core.domain.entity.Story;
 
 public abstract class Postbox
 {
-    protected EtingPostboxKey etingPostboxKey;
+    protected EtingKey etingKey;
 	/**
 	 */
-	public Postbox(EtingPostboxKey key){
-		this.etingPostboxKey = key;
+	public Postbox(EtingKey key){
+		this.etingKey = key;
 	}
 
 	/**

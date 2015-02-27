@@ -1,10 +1,8 @@
 package me.eting.server.core.service.story.classifier;
 
 
-import me.eting.server.core.domain.EtingLang;
-import me.eting.server.core.domain.EtingType;
-import me.eting.server.core.domain.entity.Envelope;
-import me.eting.server.core.domain.entity.Story;
+import me.eting.common.domain.EtingLang;
+import me.eting.common.domain.EtingType;
 
 /**
  * 한국어를 처리하는 이야기 분류기이다.

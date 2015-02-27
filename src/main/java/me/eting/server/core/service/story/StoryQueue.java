@@ -1,10 +1,8 @@
 package me.eting.server.core.service.story;
-import me.eting.server.core.domain.entity.Story;
+import me.eting.common.domain.story.Story;
 import org.springframework.stereotype.Component;
 
 import java.util.Queue;
-import java.util.Set;
-import java.util.HashSet;
 
 
 /**

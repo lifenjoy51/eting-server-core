@@ -1,5 +1,5 @@
 package me.eting.server.core.service.story.classifier;
-import me.eting.server.core.domain.EtingLang;
+import me.eting.common.domain.EtingLang;
 
 import java.util.Map;
 

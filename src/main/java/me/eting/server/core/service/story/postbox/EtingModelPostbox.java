@@ -1,9 +1,8 @@
 package me.eting.server.core.service.story.postbox;
 
 
-import me.eting.server.core.domain.EtingPostboxKey;
-import me.eting.server.core.domain.entity.Story;
-import me.eting.server.core.service.story.postbox.Postbox;
+import me.eting.common.domain.EtingKey;
+import me.eting.common.domain.story.Story;
 
 /**
  * 이팅모델을 적용한 우체통이다.
@@ -14,7 +13,7 @@ public class EtingModelPostbox extends Postbox
 {
 	/**
 	 */
-	public EtingModelPostbox(EtingPostboxKey key){
+	public EtingModelPostbox(EtingKey key){
 		super(key);
 	}
 

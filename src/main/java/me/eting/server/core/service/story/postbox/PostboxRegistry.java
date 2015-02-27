@@ -1,9 +1,8 @@
 package me.eting.server.core.service.story.postbox;
-import me.eting.server.core.domain.EtingPostboxKey;
+import me.eting.common.domain.EtingKey;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
-import java.util.Set;
 
 
 /**
@@ -16,7 +15,7 @@ public class PostboxRegistry
 {
 	/**
 	 */
-	private Map<EtingPostboxKey, Postbox> postbox;
+	private Map<EtingKey, Postbox> postbox;
 	
 	/**
 	 */
