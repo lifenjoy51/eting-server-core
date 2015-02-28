@@ -14,8 +14,8 @@ public class ReplyService {
      * 답장달기 
      * @param reply
      */
-    public void save(Reply reply){
-        
+    public Reply save(Reply reply){
+        return null;
     }
 
     /**

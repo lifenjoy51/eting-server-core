@@ -1,12 +1,16 @@
 package me.eting.common.domain.reply;
 
 
+import lombok.Data;
+
 import javax.persistence.*;
 import java.util.Date;
 
 /**
  */
-
+@Data
+@Entity
+@Table(name = "reported_reply")
 public class ReportedReply
 {
     /**

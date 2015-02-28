@@ -2,8 +2,10 @@ package me.eting.common.domain.reply;
 
 import lombok.Data;
 import me.eting.common.domain.story.ExchangedStory;
+import me.eting.common.util.EtingUtil;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 
@@ -22,7 +24,7 @@ public class Reply
 	/**
 	 */
 	@Temporal(TemporalType.TIMESTAMP)
-	private Date ts;
+	private Date ts = new Date();
 
 	/**
 	 */
@@ -54,8 +56,14 @@ public class Reply
 	/**
 	 */
 	public Reply(){
-		super();
+        emoticon = new ArrayList<Emoticon>();
 	}
+    
+    public Reply(ExchangedStory exchangedStory){
+        this();
+        this.id = exchangedStory.getId();
+        this.exchangedStory = exchangedStory;
+    }
 
 }
 

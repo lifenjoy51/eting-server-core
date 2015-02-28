@@ -30,7 +30,7 @@ public class Device {
      * 현재시간의 타임스탬프.
      */
     @Temporal(TemporalType.TIMESTAMP)
-    private Date ts;
+    private Date ts = new Date();
 
     /**
      * 안드로이드 A

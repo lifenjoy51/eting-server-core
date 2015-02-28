@@ -22,7 +22,7 @@ public class Story
 	/**
 	 */
     @Temporal(TemporalType.TIMESTAMP)
-    private Date ts;
+    private Date ts = new Date();
 	
 	/**
 	 */
