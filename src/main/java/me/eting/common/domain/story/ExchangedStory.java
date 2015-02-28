@@ -4,6 +4,7 @@ import lombok.Data;
 import me.eting.common.domain.story.Story;
 import me.eting.common.domain.user.Device;
 import me.eting.common.domain.user.Incognito;
+import me.eting.common.util.EtingUtil;
 
 import javax.persistence.*;
 
@@ -28,14 +29,14 @@ public class ExchangedStory
 	/**
 	 */
     @ManyToOne
-    @JoinColumn(name="incognito_id")
-    private Incognito incognito;
-	
-	/**
-	 */
-    @ManyToOne
     @JoinColumn(name="story_id")
     private Story story;
+
+    /**
+     */
+    @ManyToOne
+    @JoinColumn(name="incognito_id")
+    private Incognito incognito;
 	
 	/**
 	 */
@@ -44,9 +45,12 @@ public class ExchangedStory
 	}
 
     /**
+     * 어떤 이야기를 누가 받아갔는가. 
      */
-    public ExchangedStory(Story story) {
-        super();
+    public ExchangedStory(Story story, Incognito receiver) {
+        this.id = EtingUtil.generatedId(receiver.getId());    //타임스탬프 + 아이디.
+        this.story = story;
+        this.incognito = incognito;
     }
 
 }

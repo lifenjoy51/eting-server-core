@@ -3,6 +3,7 @@ package me.eting.server.core.service.story;
 import me.eting.common.domain.story.ExchangedStory;
 import me.eting.common.domain.story.Story;
 import me.eting.common.domain.user.Incognito;
+import me.eting.server.core.repository.ExchangedStoryRepository;
 import me.eting.server.core.repository.StoryRepository;
 import me.eting.server.core.service.story.postbox.PostboxService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +25,9 @@ public class StoryService {
 
     @Autowired
     StoryRepository storyRepository;
+    
+    @Autowired
+    ExchangedStoryRepository exchangedStoryRepository;
 
     /**
      * 작성한 이야기를 저장한다.
@@ -49,7 +53,7 @@ public class StoryService {
         //이야기를 받아온다.
         Story pickedStory = postboxService.pickStory(incognito);
         //교환된 이야기 생성.
-        ExchangedStory exchangedStory = new ExchangedStory(pickedStory);
+        ExchangedStory exchangedStory = new ExchangedStory(pickedStory, incognito);
         //반환
         return exchangedStory;
     }
@@ -59,7 +63,10 @@ public class StoryService {
      * @param exchangedStory
      */
     public void pass(ExchangedStory exchangedStory){
-                
+        //패스 상태 변경.
+        exchangedStory.setPassed(true);
+        //업데이트
+        exchangedStoryRepository.save(exchangedStory);
     }
 
     /**
