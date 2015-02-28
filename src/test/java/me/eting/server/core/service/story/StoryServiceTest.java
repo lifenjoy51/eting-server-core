@@ -1,6 +1,7 @@
 package me.eting.server.core.service.story;
 
 import me.eting.TestConfig;
+import me.eting.common.domain.story.ExchangedStory;
 import me.eting.common.domain.story.Story;
 import me.eting.common.domain.user.Device;
 import me.eting.common.domain.user.Incognito;
@@ -70,6 +71,27 @@ public class StoryServiceTest {
 
         //출력
         System.out.println(savedStory);
+
+    }
+
+    @Test
+    public void testExchange() throws Exception {
+        //받기
+        ExchangedStory s = storyService.exchange(tom);
+
+        //확인
+        assertNotNull(s);
+
+        //출력
+        System.out.println(s);
+        
+    }
+
+    public void testPass() throws Exception {
+
+    }
+
+    public void testReport() throws Exception {
 
     }
 }

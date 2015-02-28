@@ -1,8 +1,12 @@
 package me.eting.server.core.service.story;
 
+import me.eting.common.domain.story.ExchangedStory;
 import me.eting.common.domain.story.Story;
+import me.eting.common.domain.user.Incognito;
 import me.eting.server.core.repository.StoryRepository;
+import me.eting.server.core.service.story.postbox.PostboxService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 /**
@@ -13,6 +17,10 @@ public class StoryService {
 
     @Autowired
     StoryQueue storyQueue;
+
+    @Autowired
+    @Qualifier("PostboxServiceMock")
+    PostboxService postboxService;
 
     @Autowired
     StoryRepository storyRepository;
@@ -30,6 +38,36 @@ public class StoryService {
         storyQueue.offer(savedStory);
         //반환.
         return savedStory;
+    }
+
+    /**
+     * 이야기를 받아온다. 
+     * @param incognito
+     * @return
+     */
+    public ExchangedStory exchange(Incognito incognito){
+        //이야기를 받아온다.
+        Story pickedStory = postboxService.pickStory(incognito);
+        //교환된 이야기 생성.
+        ExchangedStory exchangedStory = new ExchangedStory(pickedStory);
+        //반환
+        return exchangedStory;
+    }
+
+    /**
+     * 받은 이야기를 패스한다. 
+     * @param exchangedStory
+     */
+    public void pass(ExchangedStory exchangedStory){
+                
+    }
+
+    /**
+     * 받은 이야기를 신고한다.
+     * @param exchangedStory
+     */
+    public void report(ExchangedStory exchangedStory){
+        
     }
 
 }

@@ -43,5 +43,11 @@ public class ExchangedStory
 		super();
 	}
 
+    /**
+     */
+    public ExchangedStory(Story story) {
+        super();
+    }
+
 }
 
