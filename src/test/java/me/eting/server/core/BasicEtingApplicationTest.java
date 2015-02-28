@@ -9,6 +9,7 @@ import me.eting.common.domain.story.Story;
 import me.eting.common.domain.user.Device;
 import me.eting.common.domain.user.Incognito;
 import me.eting.common.util.EtingUtil;
+import me.eting.common.util.TestUtil;
 import me.eting.server.core.service.reply.ReplyService;
 import me.eting.server.core.service.story.StoryService;
 import me.eting.server.core.service.user.UserService;
@@ -20,12 +21,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
+import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertNull;
 import static org.junit.Assert.assertNotNull;
 
@@ -77,6 +80,7 @@ public class BasicEtingApplicationTest {
     }
 
     @Test
+    @Transactional
     public void testMain() throws Exception {
         //사용자.
         Incognito tom = users.get("tom");
@@ -101,15 +105,19 @@ public class BasicEtingApplicationTest {
         
         //작성 @2 - #2 > [@1#1, @2#2]
         storyMap.put("#2", storyService.save(randomStory(amy)));
+        assertNotNull(storyMap.get("#2"));
         
         //받기 @2 - [@1#1, @2#2] > @1#1 받음 > $1
         exchangedStoryMap.put("$1", storyService.exchange(tom));
+        assertEquals(storyMap.get("#1"), exchangedStoryMap.get("$1").getStory());
         
         //작성 @1 - #3 > [@1#1, @2#2, @1#3]
-        storyMap.put("#3", storyService.save(randomStory(tom)));        
+        storyMap.put("#3", storyService.save(randomStory(tom)));
+        assertNotNull(storyMap.get("#3"));
         
         //받기 @1 - [@1#1, @2#2, @1#3] > @2#2 받음 > $2
         exchangedStoryMap.put("$2", storyService.exchange(tom));
+        assertEquals(storyMap.get("#2"), exchangedStoryMap.get("$2").getStory());
         
         //답장 @2 - $1 > %1 > [@2#2, @1#3]
         replyMap.put("%1", replyService.save(newReply(exchangedStoryMap.get("$1"))));
@@ -148,7 +156,7 @@ public class BasicEtingApplicationTest {
      */
     private Story randomStory(Incognito incognito) throws InterruptedException {
         Story story = new Story();
-        story.setContent(RandomStringUtils.randomAscii(100));
+        story.setContent(TestUtil.randomStoryText());
         story.setId(EtingUtil.generatedId(incognito.getId()));
         story.setIncognito(incognito);
         Thread.sleep(1000); //휴식.
@@ -162,7 +170,7 @@ public class BasicEtingApplicationTest {
      */
     private Reply newReply(ExchangedStory exchangedStory) {
         Reply reply = new Reply(exchangedStory);
-        reply.setContent(RandomStringUtils.randomAscii(50));
+        reply.setContent(TestUtil.randomReplyText());
         reply.getEmoticon().add(Emoticon.FINE); //이거 맞어??
         return reply;
     }
