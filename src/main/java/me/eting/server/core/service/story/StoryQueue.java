@@ -1,4 +1,5 @@
 package me.eting.server.core.service.story;
+
 import me.eting.common.domain.story.Story;
 import org.springframework.stereotype.Component;
 
@@ -12,31 +13,39 @@ import java.util.Queue;
  * <div>추후 메세지큐로 대체될 수 있음.</div>
  */
 @Component
-public class StoryQueue
-{
-	/**
-	 */
-	private Queue<Story> stories;
-	
-	/**
-	 */
-	public StoryQueue(){
-        stories = new LinkedList<Story>();
-	}
+public class StoryQueue {
+    /**
+     */
+    private Queue<Story> stories;
 
-	/**
+    /**
+     */
+    public StoryQueue() {
+        stories = new LinkedList<Story>();
+    }
+
+    /**
      * queue에 있는 이야기를 하나씩 빼온다.
-	 */
-	public Story poll() {
-		return stories.poll();
-	}
-	
-	/**
+     */
+    public Story poll() {
+        Story story = stories.poll();
+        return story;
+    }
+
+    /**
      * quque에 이야기를 넣는다.
-	 */
-	public boolean offer(Story story) {
-		return stories.add(story);	
-	}
-	
+     */
+    public boolean offer(Story story) {
+        return stories.add(story);
+    }
+
+    /**
+     * 출력용.
+     * @return
+     */
+    public Queue<Story> print(){
+        return new LinkedList<Story>(stories);
+    }
+
 }
 

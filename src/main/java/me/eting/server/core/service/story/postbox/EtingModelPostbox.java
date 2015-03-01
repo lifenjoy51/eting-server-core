@@ -1,8 +1,6 @@
 package me.eting.server.core.service.story.postbox;
 
 
-import me.eting.common.domain.EtingKey;
-import me.eting.common.domain.story.EnvelopedStory;
 import me.eting.common.domain.story.Story;
 
 import java.util.LinkedList;
@@ -13,13 +11,12 @@ import java.util.Queue;
  * <div>연령별, 분위기별 그룹이 적용된다.</div>
  */
 
-public class EtingModelPostbox extends Postbox
-{
+public class EtingModelPostbox extends Postbox {
     private Queue<Story> queue;
-    
-	/**
-	 */
-	public EtingModelPostbox(PostboxRegistry postboxRegistry){
+
+    /**
+     */
+    public EtingModelPostbox(PostboxRegistry postboxRegistry) {
         super(postboxRegistry);
         queue = new LinkedList<Story>();
     }
@@ -27,6 +24,7 @@ public class EtingModelPostbox extends Postbox
     @Override
     public void put(Story story) {
         queue.add(story);
+        postboxRegistry.registStory(story, this);
     }
 
     @Override

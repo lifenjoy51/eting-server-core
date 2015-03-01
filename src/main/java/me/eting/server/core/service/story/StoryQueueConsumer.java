@@ -13,7 +13,6 @@ import me.eting.server.core.service.story.postbox.Postbox;
 import me.eting.server.core.service.story.postbox.PostboxRegistry;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -26,24 +25,23 @@ import org.springframework.stereotype.Component;
 @Component
 @EnableAutoConfiguration
 @EnableScheduling
-public class StoryQueueConsumer
-{
-	/**
-	 */
+public class StoryQueueConsumer {
+    /**
+     */
     @Autowired
-	private StoryQueue storyQueue;
-	
-	/**
-	 */
+    private StoryQueue storyQueue;
+
+    /**
+     */
     @Autowired
     private StoryClassifierRegistry storyClassifierRegistry;
-	
-	/**
-	 */
+
+    /**
+     */
     @Autowired
     private PostboxRegistry postboxRegistry;
 
-    /**      
+    /**
      */
     @Autowired
     private DuplicationService duplicationService;
@@ -52,26 +50,25 @@ public class StoryQueueConsumer
      */
     @Autowired
     private IncognitoRepository incognitoRepository;
-	
-	/**
-	 */
-	public StoryQueueConsumer(){
-		super();
-	}
 
-	/**
-	 * 주기적으로 StoryQueue에 쌓인 이야기들을 불러와 작업한다.
+    /**
+     */
+    public StoryQueueConsumer() {
+        super();
+    }
+
+    /**
+     * 주기적으로 StoryQueue에 쌓인 이야기들을 불러와 작업한다.
      * <div>언어에 맞는 분류기에서 이야기를 분류하고 편지봉투로 감싼다.</div>
      * <div>편지봉투에 넣은 이야기를 분배기에게 넘겨준다.</div>
-	 */
-    @Scheduled(fixedDelay=1000) //queue가 비어있다면 잠시 쉰다.
-	public void handleStories() {
-        System.out.println("handle stories...");
+     */
+    @Scheduled(fixedDelay = 1000) //queue가 비어있다면 잠시 쉰다.
+    public void handleStories() {
         // storyQueue에서 이야기를 계속 불러와서 처리한다.
         Story story = null;
-        while((story = storyQueue.poll()) != null){
+        while ((story = storyQueue.poll()) != null) {
             //중복체크를 한다.
-            if(duplicationService.isDuplicated(story)) continue;
+            if (duplicationService.isDuplicated(story)) continue;
             //이야기 작성자의 언어설정을 불러온다.
             EtingLang lang = story.getIncognito().getEtingKey().getEtingLang();
             // 언어에 맞는 분류기를 받아온다.
@@ -85,24 +82,24 @@ public class StoryQueueConsumer
             // 후속처리를 한다.
             updateDeviceType(envelopedStory);
         }
-	}
-	
-	/**
+    }
+
+    /**
      * 기기 유형을 업데이트한다.
      * Envelope를 생성한 이후 Envelope의 유형에 맞게 기기유형을 바꾼다.
-	 */
-	private void updateDeviceType(EnvelopedStory envelopedStory) {
-		//사용자의 원래 eting type
+     */
+    private void updateDeviceType(EnvelopedStory envelopedStory) {
+        //사용자의 원래 eting type
         EtingType baseEtingType = envelopedStory.getStory().getIncognito().getEtingKey().getEtingType();
         //봉투에 저힌 eting type
         EtingType newEtingType = envelopedStory.getEtingKey().getEtingType();
         //서로 다를 경우 업데이트.
-        if(!baseEtingType.equals(newEtingType)){
+        if (!baseEtingType.equals(newEtingType)) {
             Incognito incognito = envelopedStory.getStory().getIncognito();
             incognito.getEtingKey().setEtingType(newEtingType); //TODO 제대로 업데이트 되는지 확인 필요.
             incognitoRepository.save(incognito);
         }
-	}
-	
+    }
+
 }
 

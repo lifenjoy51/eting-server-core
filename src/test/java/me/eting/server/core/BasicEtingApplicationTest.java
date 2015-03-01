@@ -11,7 +11,11 @@ import me.eting.common.domain.user.Incognito;
 import me.eting.common.util.EtingUtil;
 import me.eting.common.util.TestUtil;
 import me.eting.server.core.service.reply.ReplyService;
+import me.eting.server.core.service.story.StoryQueue;
+import me.eting.server.core.service.story.StoryQueueConsumer;
 import me.eting.server.core.service.story.StoryService;
+import me.eting.server.core.service.story.postbox.Postbox;
+import me.eting.server.core.service.story.postbox.PostboxRegistry;
 import me.eting.server.core.service.user.UserService;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.Before;
@@ -28,26 +32,25 @@ import java.util.Map;
 import java.util.UUID;
 
 import static junit.framework.TestCase.assertEquals;
-import static junit.framework.TestCase.assertNull;
 import static org.junit.Assert.assertNotNull;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = TestConfig.class)
 @ActiveProfiles("test")
 public class BasicEtingApplicationTest {
-    
+
     //사용자.
     Map<String, Incognito> users;
-    
+
     //작성한 이야기.
     Map<String, Story> storyMap;
-    
+
     //교환한 이야기.
     Map<String, ExchangedStory> exchangedStoryMap;
-    
+
     //답장들
     Map<String, Reply> replyMap;
-    
+
     //교환한 답장
     Map<String, ExchangedReply> exchangedReplyMap;
 
@@ -56,10 +59,19 @@ public class BasicEtingApplicationTest {
 
     @Autowired
     StoryService storyService;
-    
+
     @Autowired
     ReplyService replyService;
-    
+
+    @Autowired
+    StoryQueue storyQueue;
+
+    @Autowired
+    PostboxRegistry postboxRegistry;
+
+    @Autowired
+    StoryQueueConsumer storyQueueConsumer;
+
     @Before
     public void setUp() throws Exception {
         //유저 준비. tom, amy, ted.
@@ -70,7 +82,7 @@ public class BasicEtingApplicationTest {
         users.put("amy", userService.register(randomDevice(), EtingLang.koKR));
         //등록 @3 - TED
         users.put("ted", userService.register(randomDevice(), EtingLang.koKR));
-        
+
         //맵 초기화
         storyMap = new HashMap<String, Story>();
         replyMap = new HashMap<String, Reply>();
@@ -85,7 +97,7 @@ public class BasicEtingApplicationTest {
         Incognito tom = users.get("tom");
         Incognito amy = users.get("amy");
         Incognito ted = users.get("ted");
-        
+
         // 등록 @ 
         // 이야기 작성 # 
         // 이야기 받기 $ 
@@ -97,32 +109,39 @@ public class BasicEtingApplicationTest {
 
         //작성 @1 - #1 > [@1#1]
         storyMap.put("#1", storyService.save(randomStory(tom)));
+        storyQueueConsumer.handleStories();
+        monitoring("작성 @1 - #1 > [@1#1]");
         assertNotNull(storyMap.get("#1"));
 
         //받기 @1 - [@1#1] > 못받음.
         //assertNull(storyService.exchange(tom));
-        
+
         //작성 @2 - #2 > [@1#1, @2#2]
         storyMap.put("#2", storyService.save(randomStory(amy)));
+        storyQueueConsumer.handleStories();
+        monitoring("작성 @2 - #2 > [@1#1, @2#2]");
         assertNotNull(storyMap.get("#2"));
-        
+
         //받기 @2 - [@1#1, @2#2] > @1#1 받음 > $1
         //잠시 쉬었다가.
-        Thread.sleep(1000);
         exchangedStoryMap.put("$1", storyService.exchange(tom));
+        monitoring("받기 @2 - [@1#1, @2#2] > @1#1 받음 > $1");
         assertEquals(storyMap.get("#1"), exchangedStoryMap.get("$1").getStory());
-        
+
         //작성 @1 - #3 > [@1#1, @2#2, @1#3]
         storyMap.put("#3", storyService.save(randomStory(tom)));
+        storyQueueConsumer.handleStories();
+        monitoring("작성 @1 - #3 > [@1#1, @2#2, @1#3]");
         assertNotNull(storyMap.get("#3"));
-        
+
         //받기 @1 - [@1#1, @2#2, @1#3] > @2#2 받음 > $2
         exchangedStoryMap.put("$2", storyService.exchange(tom));
+        monitoring("받기 @1 - [@1#1, @2#2, @1#3] > @2#2 받음 > $2");
         assertEquals(storyMap.get("#2"), exchangedStoryMap.get("$2").getStory());
-        
+
         //답장 @2 - $1 > %1 > [@2#2, @1#3]
         replyMap.put("%1", replyService.save(newReply(exchangedStoryMap.get("$1"))));
-        
+
         //받기 @3 - [@2#2, @1#3] > @2#2 받음 > $3
         //답장 @1 - $2 > %2 > [@1#3] > 이야기 작성자에게 전송.
         //답장 @3 - $3 > %3 > [@1#3] > 이건 무시.
@@ -137,7 +156,30 @@ public class BasicEtingApplicationTest {
     }
 
     /**
+     * 현재 queue 상태를 출력한다.
+     */
+    private void monitoring(String msg) {
+        System.out.println(msg);
+
+        //storyqueue 상태 출력.
+        System.out.print("story queue : ");
+        for (Story s : storyQueue.print()) {
+            System.out.print(s.getId() + " | ");
+        }
+        System.out.println();
+
+        //postbox 상태 출력.
+        System.out.print("postbox : ");
+        for (Map.Entry<Long, Postbox> e : postboxRegistry.print().entrySet()) {
+            System.out.print(String.valueOf(e.getKey()) + "_" + e.getValue() + " | ");
+        }
+        System.out.println();
+
+    }
+
+    /**
      * 기기 자동생성.
+     *
      * @return
      */
     private Device randomDevice() throws InterruptedException {
@@ -145,13 +187,14 @@ public class BasicEtingApplicationTest {
         device.setUuid(UUID.randomUUID().toString());
         device.setOs("A");
         device.setPushKey(RandomStringUtils.randomAscii(160));
-        Thread.sleep(1000); //휴식.
+        Thread.sleep(100); //휴식.
         return device;
-        
+
     }
 
     /**
-     * 이야기를 하나 생성한다. 
+     * 이야기를 하나 생성한다.
+     *
      * @param incognito
      * @return
      */
@@ -165,7 +208,8 @@ public class BasicEtingApplicationTest {
     }
 
     /**
-     * 답장을 작성한다. 
+     * 답장을 작성한다.
+     *
      * @param exchangedStory
      * @return
      */
