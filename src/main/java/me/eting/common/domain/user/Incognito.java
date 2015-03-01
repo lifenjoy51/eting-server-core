@@ -68,8 +68,23 @@ public class Incognito {
     public Incognito() {
     }
 
+    /**
+     * 언어정보가 없을 때. 
+     * @param device
+     */
     public Incognito(Device device) {
         this.device = device;
+        this.etingKey = new EtingKey(EtingLang.basic, EtingType.NORMAL);
+    }
+
+    /**
+     * 언어정보를 갖고 등록할 때.
+     * @param device
+     * @param etingLang
+     */
+    public Incognito(Device device, EtingLang etingLang) {
+        this.device = device;
+        this.etingKey = new EtingKey(etingLang, EtingType.NORMAL);
     }
 
 }

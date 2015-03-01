@@ -1,7 +1,8 @@
-package me.eting;
+package me.eting.server.core;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.boot.orm.jpa.EntityScan;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -17,6 +18,7 @@ import javax.sql.DataSource;
  * Created by lifenjoy51 on 12/3/14.
  */
 @Profile("test")
+@EntityScan(basePackages =  "me.eting.common")
 @ComponentScan
 @Configuration
 @EnableAutoConfiguration

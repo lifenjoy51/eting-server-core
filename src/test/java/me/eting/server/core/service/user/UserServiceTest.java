@@ -1,6 +1,7 @@
 package me.eting.server.core.service.user;
 
-import me.eting.TestConfig;
+import me.eting.server.core.TestConfig;
+import me.eting.common.domain.EtingLang;
 import me.eting.common.domain.user.Device;
 import me.eting.common.domain.user.Incognito;
 import org.apache.commons.lang3.RandomStringUtils;
@@ -40,7 +41,7 @@ public class UserServiceTest {
         tomsDevice.setPushKey(RandomStringUtils.randomAscii(160));
 
         //등록.
-        Incognito tomsIncognito = userService.register(tomsDevice);
+        Incognito tomsIncognito = userService.register(tomsDevice, EtingLang.basic);
         //확인.
         assertNotNull(tomsIncognito);
 

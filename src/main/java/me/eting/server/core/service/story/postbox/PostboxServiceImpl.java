@@ -27,15 +27,15 @@ public class PostboxServiceImpl implements PostboxService {
      */
     @Override
     public Story pickStory(Incognito incognito) {
-        // TODO 개발필요.
-        return null;
+        Postbox postbox = postboxRegistry.getPostbox(incognito.getEtingKey());
+        return postbox.pick();
     }
 
     /**
      * 우체통에서 이야기를 제거한다.
      */
     @Override
-    public void removeStory() {
+    public void removeStory(Story story) {
         // TODO implement me
     }
 

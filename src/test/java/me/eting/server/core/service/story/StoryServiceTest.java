@@ -1,6 +1,7 @@
 package me.eting.server.core.service.story;
 
-import me.eting.TestConfig;
+import me.eting.server.core.TestConfig;
+import me.eting.common.domain.EtingLang;
 import me.eting.common.domain.story.ExchangedStory;
 import me.eting.common.domain.story.Story;
 import me.eting.common.domain.user.Device;
@@ -49,7 +50,7 @@ public class StoryServiceTest {
         tomsDevice.setPushKey(RandomStringUtils.randomAscii(160));
 
         //등록.
-        Incognito tomsIncognito = userService.register(tomsDevice);
+        Incognito tomsIncognito = userService.register(tomsDevice, EtingLang.basic);
         return tomsIncognito;
     }
 

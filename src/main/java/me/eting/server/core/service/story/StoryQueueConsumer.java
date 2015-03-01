@@ -12,6 +12,9 @@ import me.eting.server.core.service.story.classifier.StoryClassifierRegistry;
 import me.eting.server.core.service.story.postbox.Postbox;
 import me.eting.server.core.service.story.postbox.PostboxRegistry;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -21,7 +24,9 @@ import org.springframework.stereotype.Component;
  * <div>2. 적절한 우체통에 넣는다.</div>
  */
 @Component
-public abstract class StoryQueueConsumer
+@EnableAutoConfiguration
+@EnableScheduling
+public class StoryQueueConsumer
 {
 	/**
 	 */
@@ -61,6 +66,7 @@ public abstract class StoryQueueConsumer
 	 */
     @Scheduled(fixedDelay=1000) //queue가 비어있다면 잠시 쉰다.
 	public void handleStories() {
+        System.out.println("handle stories...");
         // storyQueue에서 이야기를 계속 불러와서 처리한다.
         Story story = null;
         while((story = storyQueue.poll()) != null){
@@ -75,7 +81,7 @@ public abstract class StoryQueueConsumer
             // 봉투에 적힌 정보를 통해 적절한 우체통을 가져온다.
             Postbox postbox = postboxRegistry.getPostbox(envelopedStory.getEtingKey());
             // 봉투에 담긴 이야기를 우체통에 넣는다.
-            postbox.put(envelopedStory);
+            postbox.put(envelopedStory.getStory());
             // 후속처리를 한다.
             updateDeviceType(envelopedStory);
         }

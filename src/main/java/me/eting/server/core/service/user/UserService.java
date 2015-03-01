@@ -1,5 +1,7 @@
 package me.eting.server.core.service.user;
 
+import me.eting.common.domain.EtingKey;
+import me.eting.common.domain.EtingLang;
 import me.eting.common.domain.user.Device;
 import me.eting.common.domain.user.Incognito;
 import me.eting.server.core.repository.IncognitoRepository;
@@ -21,9 +23,9 @@ public class UserService {
      * @param device
      * @return
      */
-    public Incognito register(Device device){
+    public Incognito register(Device device, EtingLang etingLang){
         //새로운 익명유저 생성.
-        Incognito newIncognito = new Incognito(device);
+        Incognito newIncognito = new Incognito(device, etingLang);
         //새로운 익명유저 저장.
         Incognito savedNewIncognito = incognitoRepository.save(newIncognito);
         //저장된 익명유저 반환.

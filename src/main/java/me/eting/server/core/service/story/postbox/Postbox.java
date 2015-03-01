@@ -14,22 +14,29 @@ import me.eting.common.domain.story.Story;
 
 public abstract class Postbox
 {
-    protected EtingKey etingKey;
+    
+    PostboxRegistry postboxRegistry;
+    
 	/**
 	 */
-	public Postbox(EtingKey key){
-		this.etingKey = key;
-	}
+	public Postbox(PostboxRegistry postboxRegistry){
+        this.postboxRegistry = postboxRegistry;
+    }
 
 	/**
      * 우체통에 이야기를 집어 넣는다.
 	 */
-	public abstract void put(EnvelopedStory envelopedStory);
+	public abstract void put(Story story);
 	
 	/**
      * 우체통에서 이야기를 하나 뽑는다.
 	 */
 	public  abstract Story pick();
+
+    /**
+     * 우체통에서 이야기를 삭제한다.* 
+     */
+    public abstract  void remove(Story story);
 	
 }
 

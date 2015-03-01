@@ -36,7 +36,7 @@ public class PostboxServiceMock implements PostboxService {
      * 우체통에서 이야기를 제거한다.
      */
     @Override
-    public void removeStory() {
+    public void removeStory(Story story) {
         // TODO implement me
     }
 

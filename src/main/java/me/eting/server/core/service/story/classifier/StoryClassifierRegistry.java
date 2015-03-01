@@ -25,12 +25,14 @@ public class StoryClassifierRegistry {
     private ApplicationContext context;
 
     /**
-     * 이 부분이 계속 변할것이다. 지원하는 언어가 늘어날수록 복잡해 질 것이다. 어떻게 관리하는게 효율적인가?
      */
     public StoryClassifierRegistry() {
         storyClassifier = new HashMap<EtingLang, StoryClassifier>();
     }
 
+    /**
+     * 이 부분이 계속 변할것이다. 지원하는 언어가 늘어날수록 복잡해 질 것이다. 어떻게 관리하는게 효율적인가?
+     */
     @PostConstruct
     public void init() {
         storyClassifier.put(EtingLang.basic, context.getBean(BasicStoryClassifier.class));

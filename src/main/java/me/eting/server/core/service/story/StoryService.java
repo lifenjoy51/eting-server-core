@@ -20,7 +20,7 @@ public class StoryService {
     StoryQueue storyQueue;
 
     @Autowired
-    @Qualifier("PostboxServiceMock")
+    @Qualifier("PostboxServiceImpl")
     PostboxService postboxService;
 
     @Autowired

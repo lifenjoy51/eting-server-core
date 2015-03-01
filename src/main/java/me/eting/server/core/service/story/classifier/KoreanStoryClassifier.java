@@ -3,6 +3,8 @@ package me.eting.server.core.service.story.classifier;
 
 import me.eting.common.domain.EtingType;
 import me.eting.common.domain.story.Story;
+import me.eting.server.core.service.content.KoreanContentChecker;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
@@ -10,18 +12,22 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class KoreanStoryClassifier extends StoryClassifier {
+    
+    @Autowired
+    KoreanContentChecker koreanContentChecker;
 
     public KoreanStoryClassifier() {
-
     }
 
     @Override
     protected boolean isNormalContent(Story story) {
-        return true;
+        //정상적인 내용인지 판별한다.
+        return koreanContentChecker.isNormalContent(story.getContent());
     }
 
     @Override
     protected EtingType checkTypeWords(Story story) {
+        
         return EtingType.NORMAL;
     }
 

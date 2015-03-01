@@ -1,6 +1,6 @@
 package me.eting.server.core;
 
-import me.eting.TestConfig;
+import me.eting.common.domain.EtingLang;
 import me.eting.common.domain.reply.Emoticon;
 import me.eting.common.domain.reply.ExchangedReply;
 import me.eting.common.domain.reply.Reply;
@@ -23,7 +23,6 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -66,11 +65,11 @@ public class BasicEtingApplicationTest {
         //유저 준비. tom, amy, ted.
         users = new HashMap<String, Incognito>();
         //등록 @1 - TOM
-        users.put("tom", userService.register(randomDevice()));
+        users.put("tom", userService.register(randomDevice(), EtingLang.koKR));
         //등록 @2 - AMY
-        users.put("amy", userService.register(randomDevice()));
+        users.put("amy", userService.register(randomDevice(), EtingLang.koKR));
         //등록 @3 - TED
-        users.put("ted", userService.register(randomDevice()));
+        users.put("ted", userService.register(randomDevice(), EtingLang.koKR));
         
         //맵 초기화
         storyMap = new HashMap<String, Story>();
@@ -108,6 +107,8 @@ public class BasicEtingApplicationTest {
         assertNotNull(storyMap.get("#2"));
         
         //받기 @2 - [@1#1, @2#2] > @1#1 받음 > $1
+        //잠시 쉬었다가.
+        Thread.sleep(1000);
         exchangedStoryMap.put("$1", storyService.exchange(tom));
         assertEquals(storyMap.get("#1"), exchangedStoryMap.get("$1").getStory());
         

@@ -10,5 +10,5 @@ public interface PostboxService {
     
     Story pickStory(Incognito incognito);
 
-    void removeStory();
+    void removeStory(Story story);
 }
