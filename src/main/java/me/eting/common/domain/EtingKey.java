@@ -1,12 +1,15 @@
 package me.eting.common.domain;
 
 
+import lombok.Data;
+
 import javax.persistence.Embeddable;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 
 /**
  */
+@Data
 @Embeddable
 public class EtingKey
 {
@@ -27,6 +30,12 @@ public class EtingKey
 	public EtingKey(){
 		super();
 	}
+
+    /**
+     */
+    public EtingKey(EtingLang etingLang, EtingType etingType){
+        super();
+    }
 
 }
 

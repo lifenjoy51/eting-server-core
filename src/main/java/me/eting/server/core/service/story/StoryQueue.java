@@ -2,6 +2,7 @@ package me.eting.server.core.service.story;
 import me.eting.common.domain.story.Story;
 import org.springframework.stereotype.Component;
 
+import java.util.LinkedList;
 import java.util.Queue;
 
 
@@ -20,23 +21,21 @@ public class StoryQueue
 	/**
 	 */
 	public StoryQueue(){
-        //TODO 초기화.
+        stories = new LinkedList<Story>();
 	}
 
 	/**
      * queue에 있는 이야기를 하나씩 빼온다.
 	 */
 	public Story poll() {
-		// TODO implement me
-		return null;	
+		return stories.poll();
 	}
 	
 	/**
      * quque에 이야기를 넣는다.
 	 */
-	public boolean offer(Story parameter) {
-		// TODO implement me
-		return false;	
+	public boolean offer(Story story) {
+		return stories.add(story);	
 	}
 	
 }

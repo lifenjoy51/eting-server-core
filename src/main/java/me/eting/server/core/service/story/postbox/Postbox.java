@@ -2,6 +2,7 @@ package me.eting.server.core.service.story.postbox;
 
 
 import me.eting.common.domain.EtingKey;
+import me.eting.common.domain.story.EnvelopedStory;
 import me.eting.common.domain.story.Story;
 
 /**
@@ -23,7 +24,7 @@ public abstract class Postbox
 	/**
      * 우체통에 이야기를 집어 넣는다.
 	 */
-	public abstract void put();
+	public abstract void put(EnvelopedStory envelopedStory);
 	
 	/**
      * 우체통에서 이야기를 하나 뽑는다.

@@ -19,6 +19,7 @@ public class EnvelopedStory
     /**
      */
     @Id
+    @GeneratedValue
     private long id;
 
 	/**
@@ -37,6 +38,13 @@ public class EnvelopedStory
 	public EnvelopedStory(){
 		super();
 	}
+
+    /**
+     */
+    public EnvelopedStory(EtingKey etingKey, Story story){
+        this.etingKey = etingKey;
+        this.story = story;
+    }
 
 }
 

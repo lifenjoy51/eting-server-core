@@ -6,13 +6,12 @@ import me.eting.common.domain.story.Story;
 import org.springframework.stereotype.Component;
 
 /**
- * 한국어를 처리하는 이야기 분류기이다.
+ * 기본 분류기.영혼없이 분류한다.
  */
 @Component
-public class KoreanStoryClassifier extends StoryClassifier {
+public class BasicStoryClassifier extends StoryClassifier {
 
-    public KoreanStoryClassifier() {
-
+    public BasicStoryClassifier() {
     }
 
     @Override

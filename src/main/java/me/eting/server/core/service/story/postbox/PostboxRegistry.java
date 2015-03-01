@@ -23,5 +23,14 @@ public class PostboxRegistry
 		//TODO 초기화한다. 모든 EtingLang에 대하여 각 EtingType에 맞는 우체통을 만들어서 등록한다.
 	}
 
+    /**
+     * 적절한 우체통을 받아온다.
+     * @param etingKey
+     * @return
+     */
+    public Postbox getPostbox(EtingKey etingKey){
+        return null;
+    }
+
 }
 

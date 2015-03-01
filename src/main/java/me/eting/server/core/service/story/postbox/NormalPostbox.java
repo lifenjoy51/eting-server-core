@@ -2,6 +2,7 @@ package me.eting.server.core.service.story.postbox;
 
 
 import me.eting.common.domain.EtingKey;
+import me.eting.common.domain.story.EnvelopedStory;
 import me.eting.common.domain.story.Story;
 
 /**
@@ -17,7 +18,7 @@ public class NormalPostbox extends Postbox
 	}
 
     @Override
-    public void put() {
+    public void put(EnvelopedStory envelopedStory) {
 
     }
 
