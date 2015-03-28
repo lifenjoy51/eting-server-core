@@ -8,6 +8,7 @@ import me.eting.common.domain.story.ExchangedStory;
 import me.eting.common.domain.story.Story;
 import me.eting.common.domain.user.Device;
 import me.eting.common.domain.user.Incognito;
+import me.eting.common.domain.user.UserOS;
 import me.eting.common.util.EtingUtil;
 import me.eting.common.util.TestUtil;
 import me.eting.server.core.service.reply.ReplyService;
@@ -185,7 +186,7 @@ public class BasicEtingApplicationTest {
     private Device randomDevice() throws InterruptedException {
         Device device = new Device();
         device.setUuid(UUID.randomUUID().toString());
-        device.setOs("A");
+        device.setOs(UserOS.Android);
         device.setPushKey(RandomStringUtils.randomAscii(160));
         Thread.sleep(100); //휴식.
         return device;

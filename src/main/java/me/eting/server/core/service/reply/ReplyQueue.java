@@ -2,6 +2,7 @@ package me.eting.server.core.service.reply;
 
 
 import me.eting.common.domain.reply.Reply;
+import org.springframework.stereotype.Component;
 
 import java.util.LinkedList;
 import java.util.Queue;
@@ -9,6 +10,7 @@ import java.util.Queue;
 /**
  * Created by lifenjoy51 on 2015-02-28.
  */
+@Component
 public class ReplyQueue {
     /**
      */

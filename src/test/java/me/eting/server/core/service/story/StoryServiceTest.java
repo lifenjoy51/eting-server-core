@@ -1,5 +1,6 @@
 package me.eting.server.core.service.story;
 
+import me.eting.common.domain.user.UserOS;
 import me.eting.server.core.TestConfig;
 import me.eting.common.domain.EtingLang;
 import me.eting.common.domain.story.ExchangedStory;
@@ -46,7 +47,7 @@ public class StoryServiceTest {
         Device tomsDevice = new Device();
         tomsDevice.setUuid(UUID.randomUUID().toString());
         tomsDevice.setTs(new Date());
-        tomsDevice.setOs("A");
+        tomsDevice.setOs(UserOS.Android);
         tomsDevice.setPushKey(RandomStringUtils.randomAscii(160));
 
         //등록.

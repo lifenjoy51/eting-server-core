@@ -38,6 +38,8 @@ public class StoryService {
     public Story save(Story story){
         //저장하고.
         Story savedStory = storyRepository.save(story);
+        //TODO flushing이 맞나??
+        //storyRepository.flush();
         //큐에 담는다.
         storyQueue.offer(savedStory);
         //반환.
@@ -54,6 +56,8 @@ public class StoryService {
         Story pickedStory = postboxService.pickStory(incognito);
         //교환된 이야기 생성.
         ExchangedStory exchangedStory = new ExchangedStory(pickedStory, incognito);
+        //교환한 이야기 저장해야지
+        exchangedStoryRepository.save(exchangedStory);
         //반환
         return exchangedStory;
     }

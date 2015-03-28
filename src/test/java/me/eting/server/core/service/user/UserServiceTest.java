@@ -1,5 +1,6 @@
 package me.eting.server.core.service.user;
 
+import me.eting.common.domain.user.UserOS;
 import me.eting.server.core.TestConfig;
 import me.eting.common.domain.EtingLang;
 import me.eting.common.domain.user.Device;
@@ -37,7 +38,7 @@ public class UserServiceTest {
         Device tomsDevice = new Device();
         tomsDevice.setUuid(UUID.randomUUID().toString());
         tomsDevice.setTs(new Date());
-        tomsDevice.setOs("A");
+        tomsDevice.setOs(UserOS.Android);
         tomsDevice.setPushKey(RandomStringUtils.randomAscii(160));
 
         //등록.

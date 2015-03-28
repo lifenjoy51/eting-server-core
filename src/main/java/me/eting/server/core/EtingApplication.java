@@ -11,6 +11,7 @@ import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 import org.springframework.security.crypto.password.StandardPasswordEncoder;
 
+import javax.servlet.ServletContext;
 import javax.sql.DataSource;
 
 /**
@@ -34,5 +35,6 @@ public class EtingApplication {
     public DataSource dataSource() {
         return new EmbeddedDatabaseBuilder().setType(EmbeddedDatabaseType.HSQL).build();
     }
+
 
 }

@@ -9,11 +9,11 @@ import com.relayrides.pushy.apns.util.TokenUtil;
 import me.eting.common.domain.reply.Reply;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
-import javax.servlet.ServletContext;
-import java.io.File;
 import java.io.IOException;
 import java.security.KeyManagementException;
 import java.security.KeyStoreException;
@@ -28,7 +28,7 @@ import java.security.cert.CertificateException;
 public class ApnsService extends PushService {
 
     @Autowired
-    ServletContext context;
+    ApplicationContext context;
 
     private volatile PushManager<SimpleApnsPushNotification> pushManager = null;
 
@@ -37,15 +37,14 @@ public class ApnsService extends PushService {
         PushManagerFactory<SimpleApnsPushNotification> pushManagerFactory = null;
 
         //System.out.println("loadService");
-        final String rootPath = context.getRealPath("");
-        final String certPath = rootPath + File.separator + "cert"
-                + File.separator + "eting_apns_cert_dis.p12";
+        Resource certResource = context.getResource("classpath:cert/eting_apns_cert_dis.p12");
         // final String certPath = rootPath + File.separator + "cert"+
         // File.separator + "eting_apns_cert_passwd.p12";
         final String certPassword = "nexters";
         // final String certPassword = "eting00";
 
         try {
+            String certPath = certResource.getFile().getAbsolutePath();
             pushManagerFactory = new PushManagerFactory<SimpleApnsPushNotification>(
                     ApnsEnvironment.getSandboxEnvironment(),
                     PushManagerFactory.createDefaultSSLContext(certPath,
@@ -64,9 +63,13 @@ public class ApnsService extends PushService {
             e.printStackTrace();
         }
 
-        pushManager = pushManagerFactory.buildPushManager();
+        try {
+            pushManager = pushManagerFactory.buildPushManager();
 
-        pushManager.start();
+            pushManager.start();
+        } catch (Exception e) {
+            //TODO 임시처리...
+        }
     }
 
     /**
