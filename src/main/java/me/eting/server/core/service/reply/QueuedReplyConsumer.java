@@ -49,10 +49,10 @@ public class QueuedReplyConsumer {
             // 언어에 맞는 검사기를 가져온다.
             ReplyChecker replyChecker = replyCheckerRegistry.getChecker(lang);
             // 정상적인 답글인지 검사한다.
-            if(replyChecker.isValid()){
+            if(replyChecker.isValid(reply)){
                 //작성자에게 푸쉬메세지 보내기.
                 PushService pushService = pushServiceRegistry.getChecker(reply.getIncognito());
-                pushService.push(reply);;
+                pushService.push(reply);
             }else{
                 reply.setReplyStatus(ReplyStatus.Abnormal);
                 replyRepository.save(reply);

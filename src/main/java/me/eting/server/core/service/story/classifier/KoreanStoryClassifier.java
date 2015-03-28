@@ -27,7 +27,7 @@ public class KoreanStoryClassifier extends StoryClassifier {
 
     @Override
     protected EtingType checkTypeWords(Story story) {
-        
+        // 등록한 금지어 검사하기.
         return EtingType.NORMAL;
     }
 

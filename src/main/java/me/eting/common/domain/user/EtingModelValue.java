@@ -18,5 +18,5 @@ public class EtingModelValue {
 
     @Column
     @ElementCollection
-    Collection<Integer> values = new ArrayList<Integer>();
+    List<Integer> values = new ArrayList<Integer>();
 }
