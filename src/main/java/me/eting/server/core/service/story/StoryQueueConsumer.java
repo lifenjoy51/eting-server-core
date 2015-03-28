@@ -44,7 +44,7 @@ public class StoryQueueConsumer {
     /**
      */
     @Autowired
-    private DuplicationService duplicationService;
+    private StoryDuplicationService duplicationService;
 
     /**
      */

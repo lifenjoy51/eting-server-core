@@ -1,6 +1,7 @@
 package me.eting.common.domain.user;
 
 import lombok.Data;
+import me.eting.common.domain.reply.ReplyStatus;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -37,8 +38,8 @@ public class Device {
      * 아이폰 I
      * ...
      */
-    @Column(nullable = false)
-    private String os;
+    @Enumerated(EnumType.STRING)
+    private UserOS os;
 
     /**
      */

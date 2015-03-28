@@ -2,6 +2,8 @@ package me.eting.server.core.service.reply;
 
 import me.eting.common.domain.reply.ExchangedReply;
 import me.eting.common.domain.reply.Reply;
+import me.eting.server.core.repository.ReplyRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
@@ -9,13 +11,24 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class ReplyService {
+    
+    @Autowired
+    ReplyRepository replyRepository;
+    
+    @Autowired
+    ReplyQueue replyQueue;
 
     /**
      * 답장달기 
      * @param reply
      */
     public Reply save(Reply reply){
-        return null;
+        // 저장!
+        Reply savedReply = replyRepository.save(reply);
+        // 대기열에 등록
+        replyQueue.offer(savedReply);
+        // 저장한놈 반환.
+        return savedReply;
     }
 
     /**

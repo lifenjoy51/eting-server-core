@@ -2,6 +2,7 @@ package me.eting.common.domain.reply;
 
 import lombok.Data;
 import me.eting.common.domain.story.ExchangedStory;
+import me.eting.common.domain.user.Incognito;
 import me.eting.common.util.EtingUtil;
 
 import javax.persistence.*;
@@ -29,18 +30,19 @@ public class Reply
 	/**
 	 */
     @Column(nullable = false)
-	public String content;
+	private String content;
 	
 	/**
 	 */
 	@ElementCollection
 	@Enumerated(EnumType.STRING)
-	public Collection<Emoticon> emoticon;
+    private Collection<Emoticon> emoticon;
 
 	/**
+     * 답글의 상태는 여러가지..*
 	 */
-	@Column(nullable=false, columnDefinition="boolean default false")
-	private boolean isDeleted;
+    @Enumerated(EnumType.STRING)
+    private ReplyStatus replyStatus;
 
 	/**
 	 */
@@ -51,19 +53,27 @@ public class Reply
 	 */
     @OneToOne
     @JoinColumn(name="exchanged_story_id")
-	public ExchangedStory exchangedStory;
+    private ExchangedStory exchangedStory;
+
+    /**
+     */
+    @ManyToOne
+    @JoinColumn(name="incognito_id")
+    private Incognito incognito;
 	
 	/**
 	 */
 	public Reply(){
+        
         emoticon = new ArrayList<Emoticon>();
+        
 	}
     
     public Reply(ExchangedStory exchangedStory){
         this();
         this.id = exchangedStory.getId();
         this.exchangedStory = exchangedStory;
+        this.incognito = exchangedStory.getIncognito();
     }
 
 }
-
