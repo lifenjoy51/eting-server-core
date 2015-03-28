@@ -1,9 +1,10 @@
 package me.eting.server.core.service.story.postbox;
 
 
-import me.eting.common.domain.EtingKey;
-import me.eting.common.domain.story.EnvelopedStory;
 import me.eting.common.domain.story.Story;
+import me.eting.common.domain.user.Incognito;
+
+import java.util.Queue;
 
 /**
  * 우체통 추상 클래스이다.
@@ -12,31 +13,33 @@ import me.eting.common.domain.story.Story;
  * <div>각각의 우체통을 따로 만드는 이유는 뭐지?</div>
  */
 
-public abstract class Postbox
-{
-    
+public abstract class Postbox {
+
+    Queue<Story> queue;
+
     PostboxRegistry postboxRegistry;
-    
-	/**
-	 */
-	public Postbox(PostboxRegistry postboxRegistry){
+
+    /**
+     */
+    public Postbox(PostboxRegistry postboxRegistry) {
         this.postboxRegistry = postboxRegistry;
     }
 
-	/**
+    /**
      * 우체통에 이야기를 집어 넣는다.
-	 */
-	public abstract void put(Story story);
-	
-	/**
-     * 우체통에서 이야기를 하나 뽑는다.
-	 */
-	public  abstract Story pick();
+     */
+    public abstract void put(Story story);
 
     /**
-     * 우체통에서 이야기를 삭제한다.* 
+     * 우체통에서 이야기를 하나 뽑는다.
+     * @param incognito
      */
-    public abstract  void remove(Story story);
-	
+    public abstract Story pick(Incognito incognito);
+
+    /**
+     * 우체통에서 이야기를 삭제한다.*
+     */
+    public abstract void remove(Story story);
+
 }
 

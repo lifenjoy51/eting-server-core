@@ -76,11 +76,11 @@ public class BasicEtingApplicationTest {
     public void setUp() throws Exception {
         //유저 준비. tom, amy, ted.
         users = new HashMap<String, Incognito>();
-        //등록 @1 - TOM
+        //등록 tom - TOM
         users.put("tom", userService.register(randomDevice(), EtingLang.koKR));
-        //등록 @2 - AMY
+        //등록 amy - AMY
         users.put("amy", userService.register(randomDevice(), EtingLang.koKR));
-        //등록 @3 - TED
+        //등록 ted - TED
         users.put("ted", userService.register(randomDevice(), EtingLang.koKR));
 
         //맵 초기화
@@ -107,52 +107,52 @@ public class BasicEtingApplicationTest {
         // 답장삭제 * 
         // 답장즐찾 +
 
-        //작성 @1 - #1 > [@1#1]
+        //작성 tom - #1 > [tom#1]
         storyMap.put("#1", storyService.save(randomStory(tom)));
         storyQueueConsumer.handleStories();
-        monitoring("작성 @1 - #1 > [@1#1]");
+        monitoring("작성 tom - #1 > [tom#1]");
         assertNotNull(storyMap.get("#1"));
 
-        //받기 @1 - [@1#1] > 못받음.
+        //받기 tom - [tom#1] > 못받음.
         //assertNull(storyService.exchange(tom));
 
-        //작성 @2 - #2 > [@1#1, @2#2]
+        //작성 amy - #2 > [tom#1, amy#2]
         storyMap.put("#2", storyService.save(randomStory(amy)));
         storyQueueConsumer.handleStories();
-        monitoring("작성 @2 - #2 > [@1#1, @2#2]");
+        monitoring("작성 amy - #2 > [tom#1, amy#2]");
         assertNotNull(storyMap.get("#2"));
 
-        //받기 @2 - [@1#1, @2#2] > @1#1 받음 > $1
+        //받기 amy - [tom#1, amy#2] > tom#1 받음 > $1
         //잠시 쉬었다가.
-        exchangedStoryMap.put("$1", storyService.exchange(tom));
-        monitoring("받기 @2 - [@1#1, @2#2] > @1#1 받음 > $1");
+        exchangedStoryMap.put("$1", storyService.exchange(amy));
+        monitoring("받기 amy - [tom#1, amy#2] > tom#1 받음 > $1");
         assertEquals(storyMap.get("#1"), exchangedStoryMap.get("$1").getStory());
 
-        //작성 @1 - #3 > [@1#1, @2#2, @1#3]
+        //작성 tom - #3 > [tom#1, amy#2, tom#3]
         storyMap.put("#3", storyService.save(randomStory(tom)));
         storyQueueConsumer.handleStories();
-        monitoring("작성 @1 - #3 > [@1#1, @2#2, @1#3]");
+        monitoring("작성 tom - #3 > [tom#1, amy#2, tom#3]");
         assertNotNull(storyMap.get("#3"));
 
-        //받기 @1 - [@1#1, @2#2, @1#3] > @2#2 받음 > $2
+        //받기 tom - [tom#1, amy#2, tom#3] > amy#2 받음 > $2
         exchangedStoryMap.put("$2", storyService.exchange(tom));
-        monitoring("받기 @1 - [@1#1, @2#2, @1#3] > @2#2 받음 > $2");
+        monitoring("받기 tom - [tom#1, amy#2, tom#3] > amy#2 받음 > $2");
         assertEquals(storyMap.get("#2"), exchangedStoryMap.get("$2").getStory());
 
-        //답장 @2 - $1 > %1 > [@2#2, @1#3]
+        //답장 amy - $1 > %1 > [amy#2, tom#3]
         replyMap.put("%1", replyService.save(newReply(exchangedStoryMap.get("$1"))));
 
-        //받기 @3 - [@2#2, @1#3] > @2#2 받음 > $3
-        //답장 @1 - $2 > %2 > [@1#3] > 이야기 작성자에게 전송.
-        //답장 @3 - $3 > %3 > [@1#3] > 이건 무시.
-        //작성 @2 - #4 > [@1#3, @2#4]
-        //작성 @2 - #5 > [@1#3, @2#4, @2#5]
-        //받기 @1 - [@1#3, @2#4, @2#5] > @2#4 > $4
-        //패스 @1 - $4
-        //작성 @3 - #6 > [@1#3, @2#4, @2#5, @3#6]
-        //받기 @3 - [@1#3, @2#4, @2#5, @3#6] > @1#3 > $5
-        //신고 @3 - $5 > ^1
-        //받기 @1 - [@1#3, @2#4, @2#5, @3#6] > @2#4 > $6
+        //받기 ted - [amy#2, tom#3] > amy#2 받음 > $3
+        //답장 tom - $2 > %2 > [tom#3] > 이야기 작성자에게 전송.
+        //답장 ted - $3 > %3 > [tom#3] > 이건 무시.
+        //작성 amy - #4 > [tom#3, amy#4]
+        //작성 amy - #5 > [tom#3, amy#4, amy#5]
+        //받기 tom - [tom#3, amy#4, amy#5] > amy#4 > $4
+        //패스 tom - $4
+        //작성 ted - #6 > [tom#3, amy#4, amy#5, ted#6]
+        //받기 ted - [tom#3, amy#4, amy#5, ted#6] > tom#3 > $5
+        //신고 ted - $5 > ^1
+        //받기 tom - [tom#3, amy#4, amy#5, ted#6] > amy#4 > $6
     }
 
     /**

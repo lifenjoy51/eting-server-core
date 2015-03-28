@@ -2,9 +2,9 @@ package me.eting.server.core.service.story.postbox;
 
 
 import me.eting.common.domain.story.Story;
+import me.eting.common.domain.user.Incognito;
 
 import java.util.LinkedList;
-import java.util.Queue;
 
 /**
  * 이팅모델을 적용한 우체통이다.
@@ -12,7 +12,6 @@ import java.util.Queue;
  */
 
 public class EtingModelPostbox extends Postbox {
-    private Queue<Story> queue;
 
     /**
      */
@@ -28,8 +27,11 @@ public class EtingModelPostbox extends Postbox {
     }
 
     @Override
-    public Story pick() {
-        return queue.peek();
+    public Story pick(Incognito incognito) {
+        for(Story s : queue){
+            if(!s.getIncognito().equals(incognito)) return s;
+        }
+        return null;
     }
 
     @Override

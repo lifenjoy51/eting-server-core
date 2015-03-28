@@ -65,22 +65,22 @@ public class PostboxRegistry {
                         break;
 
                     case REPORTED:
-                        postbox = new NormalPostbox(this);
+                        postbox = new BasicPostbox(this);
                         break;
                     case TRASH:
-                        postbox = new NormalPostbox(this);
+                        postbox = new BasicPostbox(this);
                         break;
                     case CELEBRITY:
-                        postbox = new NormalPostbox(this);
+                        postbox = new BasicPostbox(this);
                         break;
                     case SLANGS:
-                        postbox = new NormalPostbox(this);
+                        postbox = new BasicPostbox(this);
                         break;
                     case ANNOYING:
-                        postbox = new NormalPostbox(this);
+                        postbox = new BasicPostbox(this);
                         break;
                     case MEANINGLESS:
-                        postbox = new NormalPostbox(this);
+                        postbox = new BasicPostbox(this);
                         break;
 
                     case BLOCKED:

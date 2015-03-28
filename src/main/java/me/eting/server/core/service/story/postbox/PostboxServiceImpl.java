@@ -28,7 +28,9 @@ public class PostboxServiceImpl implements PostboxService {
     @Override
     public Story pickStory(Incognito incognito) {
         Postbox postbox = postboxRegistry.getPostbox(incognito.getEtingKey());
-        return postbox.pick();
+        // 자기가 작성한 이야기가 아닌 이야기를 빼온다.
+        // 자기것이 나오면 어떻게하지?
+        return postbox.pick(incognito);
     }
 
     /**
@@ -40,4 +42,3 @@ public class PostboxServiceImpl implements PostboxService {
     }
 
 }
-
