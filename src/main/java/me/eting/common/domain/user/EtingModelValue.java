@@ -8,6 +8,7 @@ import javax.persistence.Embeddable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Vector;
 
 /**
  * Created by lifenjoy51 on 2/27/15.
@@ -18,5 +19,9 @@ public class EtingModelValue {
 
     @Column
     @ElementCollection
-    List<Integer> values = new ArrayList<Integer>();
+    Vector<Integer> values = new Vector<Integer>();
+    
+    public EtingModelValue(Vector<Integer> values){
+        this.setValues(values);
+    }
 }

@@ -7,6 +7,7 @@ import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 import org.springframework.security.crypto.password.StandardPasswordEncoder;
@@ -17,8 +18,9 @@ import javax.sql.DataSource;
 /**
  * Created by lifenjoy51 on 12/3/14.
  */
-@ComponentScan
-@EntityScan(basePackages =  "me.eting.common")
+@ComponentScan(basePackages =  "me.eting")
+@EntityScan(basePackages =  "me.eting")
+@EnableJpaRepositories(basePackages =  "me.eting")
 @Configuration
 @EnableAutoConfiguration
 public class EtingApplication {

@@ -58,10 +58,10 @@ public class Incognito {
     @Embedded
     private EtingKey etingKey;
 
-    /**
-     */
-    @Embedded
+    /**@Embedded
     private EtingModelValue etingModelValue;
+     */
+
 
     /**
      */

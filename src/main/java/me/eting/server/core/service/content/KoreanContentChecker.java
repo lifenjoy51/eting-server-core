@@ -215,8 +215,9 @@ public class KoreanContentChecker implements ContentChecker {
         }
 
         //글쓴이의 grp_q에 따라서 rm을 조정한다..
-        EtingModelValue emv = savedReply.getIncognito().getEtingModelValue();
-        int groupValue = emv.getValues().get(0);
+        //TODO EtingModelValue emv = savedReply.getIncognito().getEtingModelValue();
+        //int groupValue = emv.getValues().get(0);
+        int groupValue = 0;
         if (groupValue == -1) {
             //짧은사람들이니까 기준도 짧게.
             rm = rm / 3;
