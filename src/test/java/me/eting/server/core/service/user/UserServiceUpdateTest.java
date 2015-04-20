@@ -5,6 +5,8 @@ import me.eting.common.domain.user.Device;
 import me.eting.common.domain.user.Incognito;
 import me.eting.common.domain.user.UserOS;
 import me.eting.server.core.TestConfig;
+import me.eting.server.model.service.ModelConsumer;
+import me.eting.server.model.service.ModelService;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.Before;
 import org.junit.Test;
@@ -26,6 +28,12 @@ public class UserServiceUpdateTest {
 
     @Autowired
     UserService userService;
+    
+    @Autowired
+    ModelConsumer modelConsumer;
+    
+    @Autowired
+    ModelService modelService;
 
     Device tomsDevice;
     Incognito tomsIncognito;
@@ -53,6 +61,11 @@ public class UserServiceUpdateTest {
         tomsIncognito.setBirthYear(1988);
         userService.updateInfo(tomsIncognito);
         System.out.println(tomsIncognito);
+        System.out.println(modelService.getValue(tomsIncognito));
+        modelConsumer.handle();
+        System.out.println(modelService.getValue(tomsIncognito));
+        
+        
     }
     
 }

@@ -51,6 +51,8 @@ public class AgeModelService extends EtingModelService {
     @Override
     public int value(Incognito incognito) {
         AgeModel model = ageModelRepository.findOne((long) incognito.getId());
+        if(model == null) return 0;
         return model.getValue();
     }
+    
 }
