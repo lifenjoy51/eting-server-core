@@ -7,6 +7,6 @@ import org.springframework.stereotype.Repository;
  * Created by lifenjoy51 on 2015-04-17.
  */
 @Repository
-public interface AgeModelRepository extends JpaRepository<AgeModel, Long> {
+public interface AgeModelRepository extends JpaRepository<AgeModel, Integer> {
 
 }

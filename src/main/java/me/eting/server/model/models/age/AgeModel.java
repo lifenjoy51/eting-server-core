@@ -17,7 +17,7 @@ public class AgeModel extends BaseModel {
     public AgeModel() {
     }
 
-    public AgeModel(long incognitoId, int value) {
+    public AgeModel(int incognitoId, int value) {
         this.setIncognitoId(incognitoId);
         this.setValue(value);
     }

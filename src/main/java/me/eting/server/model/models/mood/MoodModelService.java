@@ -20,7 +20,10 @@ public class MoodModelService extends EtingModelService {
     public void process(EtingModelSource etingModelSource) {
         // 각자 보관중인 점수 테이블이 필요함.
         MoodModel model = moodModelRepository.findOne(etingModelSource.getIncognito().getId());
-        int postive = model.getPositive();
+        if(model==null){
+            model = new MoodModel(etingModelSource.getIncognito());
+        }
+        int positive = model.getPositive();
         int negative = model.getNegative();
 
         // 점수를 산정한 다음.
@@ -31,7 +34,7 @@ public class MoodModelService extends EtingModelService {
         }
         
         // 해당 점수에 따라 결과값을 정한다.
-        model.setPositive(postive);
+        model.setPositive(positive);
         model.setNegative(negative);
         
         // 이건 지금 DB에서 이벤트로 처리하고있으니...
@@ -44,6 +47,9 @@ public class MoodModelService extends EtingModelService {
     public int value(Incognito incognito) {
         //어디까지가 이상한 놈이고 어디부터가 좋은놈인지 구분하기.
         MoodModel model = moodModelRepository.findOne(incognito.getId());
+        if(model==null){
+            return 0;
+        }
         int positive = model.getPositive();
         int negative = model.getNegative();
         int score = positive - negative;
