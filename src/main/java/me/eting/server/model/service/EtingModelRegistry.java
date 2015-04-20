@@ -43,9 +43,10 @@ public class EtingModelRegistry {
      */
     @PostConstruct
     public void init() {
-        //add maps.
+        //add maps. motel-type, model-service.
         map.get(ModelType.Story).add(context.getBean(MoodModelService.class));
         map.get(ModelType.Reply).add(context.getBean(MoodModelService.class));
+        map.get(ModelType.AbnormalContentStory).add(context.getBean(MoodModelService.class));
         map.get(ModelType.Incognito).add(context.getBean(AgeModelService.class));
 
         //add models
@@ -79,5 +80,13 @@ public class EtingModelRegistry {
      */
     public Set<EtingModelService> getModels() {
         return models;
+    }
+
+    /**
+     * 모델에서 가능한 최장거리.
+     * @return
+     */
+    public double getMaximumDistance() {
+        return maximumDistance;
     }
 }

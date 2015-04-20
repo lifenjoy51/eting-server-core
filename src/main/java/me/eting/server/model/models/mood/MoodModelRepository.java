@@ -8,6 +8,6 @@ import org.springframework.stereotype.Repository;
  * Created by lifenjoy51 on 2015-04-17.
  */
 @Repository
-public interface MoodModelRepository extends JpaRepository<MoodModel, Long> {
+public interface MoodModelRepository extends JpaRepository<MoodModel, Integer> {
 
 }

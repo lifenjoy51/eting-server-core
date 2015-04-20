@@ -165,14 +165,14 @@ public class BasicEtingApplicationTest {
         //storyqueue 상태 출력.
         System.out.print("story queue : ");
         for (Story s : storyQueue.print()) {
-            System.out.print(s.getId() + " | ");
+            System.out.print(s.getId() + " | \n");
         }
         System.out.println();
 
         //postbox 상태 출력.
-        System.out.print("postbox : ");
+        System.out.print("postbox : \n");
         for (Map.Entry<Long, Postbox> e : postboxRegistry.print().entrySet()) {
-            System.out.print(String.valueOf(e.getKey()) + "_" + e.getValue() + " | ");
+            System.out.print(String.valueOf(e.getKey()) + "_" + e.getValue().getClass().getSimpleName() + " | \n");
         }
         System.out.println();
 

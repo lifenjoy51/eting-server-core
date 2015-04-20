@@ -30,7 +30,8 @@ public class AgeModelService extends EtingModelService {
         //여튼. 나이를 갖고 구분을 해보자.
         int value = 0;
         try{
-            Incognito incognito = (Incognito) etingModelSource.getObj();
+            //모델소스에 객체들을 그냥 저장했는데...문제생길지도..
+            Incognito incognito = (Incognito) etingModelSource.getObjs()[0];
             int year = Calendar.getInstance().get(Calendar.YEAR);
             int age = year - incognito.getBirthYear();
             if(age > 10 && age < 40){

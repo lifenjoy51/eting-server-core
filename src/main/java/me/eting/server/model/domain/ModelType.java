@@ -6,5 +6,6 @@ package me.eting.server.model.domain;
 public enum ModelType {
     Story,
     Reply,
-    Incognito
+    Incognito,
+    AbnormalContentStory
 }
