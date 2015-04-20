@@ -60,7 +60,7 @@ public class EtingModelRegistry {
         }
         
         //최대거리의 1/2.
-        maximumDistance = Math.pow(totalDistanceSum, 1/models.size()) / 2;
+        maximumDistance = totalDistanceSum / 2;
     }
 
     /**

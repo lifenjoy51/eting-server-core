@@ -38,7 +38,7 @@ public class PostboxServiceImpl implements PostboxService {
      */
     @Override
     public void removeStory(Story story) {
-        // TODO implement me
+        postboxRegistry.removeStory(story);
     }
 
 }

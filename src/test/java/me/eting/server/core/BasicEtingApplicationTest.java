@@ -11,6 +11,8 @@ import me.eting.common.domain.user.Incognito;
 import me.eting.common.domain.user.UserOS;
 import me.eting.common.util.EtingUtil;
 import me.eting.common.util.TestUtil;
+import me.eting.server.core.service.reply.QueuedReplyConsumer;
+import me.eting.server.core.service.reply.ReplyQueue;
 import me.eting.server.core.service.reply.ReplyService;
 import me.eting.server.core.service.story.StoryQueue;
 import me.eting.server.core.service.story.StoryQueueConsumer;
@@ -73,6 +75,9 @@ public class BasicEtingApplicationTest {
     @Autowired
     StoryQueueConsumer storyQueueConsumer;
 
+    @Autowired
+    QueuedReplyConsumer replyConsumer;
+
     @Before
     public void setUp() throws Exception {
         //유저 준비. tom, amy, ted.
@@ -96,8 +101,14 @@ public class BasicEtingApplicationTest {
     public void testMain() throws Exception {
         //사용자.
         Incognito tom = users.get("tom");
+        System.out.println("tom");
+        System.out.println(tom);
         Incognito amy = users.get("amy");
+        System.out.println("amy");
+        System.out.println(amy);
         Incognito ted = users.get("ted");
+        System.out.println("ted");
+        System.out.println(ted);
 
         // 등록 @ 
         // 이야기 작성 # 
@@ -142,13 +153,41 @@ public class BasicEtingApplicationTest {
 
         //답장 amy - $1 > %1 > [amy#2, tom#3]
         replyMap.put("%1", replyService.save(newReply(exchangedStoryMap.get("$1"))));
+        replyConsumer.consumes();
+        monitoring("답장 amy - $1 > %1 > [amy#2, tom#3]");
 
         //받기 ted - [amy#2, tom#3] > amy#2 받음 > $3
+        exchangedStoryMap.put("$3", storyService.exchange(ted));
+        monitoring("받기 ted - [amy#2, tom#3] > amy#2 받음 > $3");
+        assertEquals(storyMap.get("#2"), exchangedStoryMap.get("$3").getStory());
+
         //답장 tom - $2 > %2 > [tom#3] > 이야기 작성자에게 전송.
+        replyMap.put("%2", replyService.save(newReply(exchangedStoryMap.get("$2"))));
+        replyConsumer.consumes();
+        monitoring("답장 tom - $2 > %2 > [tom#3]");
+
         //답장 ted - $3 > %3 > [tom#3] > 이건 무시.
+        replyMap.put("%3", replyService.save(newReply(exchangedStoryMap.get("$3"))));
+        replyConsumer.consumes();
+        monitoring("답장 ted - $3 > %3 > [tom#3] > 이건 무시.");
+
         //작성 amy - #4 > [tom#3, amy#4]
+        storyMap.put("#4", storyService.save(randomStory(amy)));
+        storyQueueConsumer.handleStories();
+        monitoring("작성 amy - #4 > [tom#3, amy#4]");
+        assertNotNull(storyMap.get("#4"));
+
         //작성 amy - #5 > [tom#3, amy#4, amy#5]
+        storyMap.put("#5", storyService.save(randomStory(amy)));
+        storyQueueConsumer.handleStories();
+        monitoring("작성 amy - #5 > [tom#3, amy#4, amy#5]");
+        assertNotNull(storyMap.get("#5"));
+
         //받기 tom - [tom#3, amy#4, amy#5] > amy#4 > $4
+        exchangedStoryMap.put("$4", storyService.exchange(tom));
+        monitoring("받기 tom - [tom#3, amy#4, amy#5] > amy#4 > $4");
+        assertEquals(storyMap.get("#4"), exchangedStoryMap.get("$4").getStory());
+
         //패스 tom - $4
         //작성 ted - #6 > [tom#3, amy#4, amy#5, ted#6]
         //받기 ted - [tom#3, amy#4, amy#5, ted#6] > tom#3 > $5
@@ -204,6 +243,8 @@ public class BasicEtingApplicationTest {
         story.setContent(TestUtil.randomStoryText());
         story.setId(EtingUtil.generatedId(incognito.getId()));
         story.setIncognito(incognito);
+        System.out.println("RANDOM STORY");
+        System.out.println(story);
         Thread.sleep(1000); //휴식.
         return story;
     }

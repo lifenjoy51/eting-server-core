@@ -28,5 +28,9 @@ public class ModelService {
         return new EtingModelValue(values);
         
     }
+
+    public double getMaximumDistance() {
+        return etingModelRegistry.getMaximumDistance();
+    }
     
 }

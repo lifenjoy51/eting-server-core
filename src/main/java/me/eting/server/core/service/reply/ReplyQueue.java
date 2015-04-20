@@ -14,27 +14,28 @@ import java.util.Queue;
 public class ReplyQueue {
     /**
      */
-    private Queue<Reply> stories;
+    private Queue<Reply> replies;
 
     /**
      */
     public ReplyQueue() {
-        stories = new LinkedList<Reply>();
+        replies = new LinkedList<Reply>();
     }
 
     /**
      * queue에 있는 이야기를 하나씩 빼온다.
      */
     public Reply poll() {
-        Reply Reply = stories.poll();
-        return Reply;
+        Reply reply = replies.poll();
+        return reply;
     }
 
     /**
      * quque에 이야기를 넣는다.
      */
-    public boolean offer(Reply Reply) {
-        return stories.add(Reply);
+    public boolean offer(Reply reply) {
+        boolean offer = replies.offer(reply);
+        return offer;
     }
 
     /**
@@ -42,7 +43,7 @@ public class ReplyQueue {
      * @return
      */
     public Queue<Reply> print(){
-        return new LinkedList<Reply>(stories);
+        return new LinkedList<Reply>(replies);
     }
 
 }
