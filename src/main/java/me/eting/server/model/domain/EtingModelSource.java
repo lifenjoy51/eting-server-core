@@ -9,7 +9,6 @@ import me.eting.common.domain.user.Incognito;
 @Data
 public class EtingModelSource {
     private ModelType modelType;
-    private Class cls;
     private Object obj;
     private Incognito incognito;
     
@@ -17,7 +16,6 @@ public class EtingModelSource {
         this.setIncognito(incognito);
         this.setModelType(modelType);
         this.setObj(obj);
-        this.setCls(obj.getClass());
     }
 
 }

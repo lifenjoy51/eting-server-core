@@ -3,10 +3,12 @@ package me.eting.server.core.service.reply.check;
 import me.eting.common.domain.reply.Reply;
 import me.eting.server.core.service.content.KoreanContentChecker;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 /**
  * Created by lifenjoy51 on 2015-02-28.
  */
+@Component
 public class KoreanReplyChecker extends ReplyChecker {
 
     @Autowired

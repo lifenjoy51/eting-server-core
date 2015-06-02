@@ -1,6 +1,7 @@
 package me.eting.server.model.models.mood;
 
 import lombok.Data;
+import me.eting.common.domain.user.Incognito;
 import me.eting.server.model.domain.BaseModel;
 
 import javax.persistence.Entity;
@@ -16,6 +17,11 @@ public class MoodModel extends BaseModel {
     
     private int positive;
     private int negative;
+    
+    
+    public MoodModel(Incognito incognito){
+        this.setIncognitoId(incognito.getId());
+    }
     
     
 }

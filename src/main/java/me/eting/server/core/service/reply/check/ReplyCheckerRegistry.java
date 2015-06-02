@@ -3,6 +3,7 @@ package me.eting.server.core.service.reply.check;
 import me.eting.common.domain.EtingLang;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
+import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import java.util.HashMap;
@@ -11,6 +12,7 @@ import java.util.Map;
 /**
  * Created by lifenjoy51 on 2015-02-28.
  */
+@Component
 public class ReplyCheckerRegistry {
     /**
      */
