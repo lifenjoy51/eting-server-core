@@ -30,6 +30,8 @@ public class BasicPostbox extends Postbox {
         for(Story s : queue){
             if(!s.getIncognito().equals(incognito)) return s;
         }
+
+        //TODO 아무것도 없을 때 그냥 빈 이야기를 반환?
         return null;
     }
 

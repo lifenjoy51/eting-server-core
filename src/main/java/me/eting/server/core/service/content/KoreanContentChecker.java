@@ -2,7 +2,6 @@ package me.eting.server.core.service.content;
 
 import me.eting.common.domain.reply.Reply;
 import me.eting.common.domain.story.Story;
-import me.eting.common.domain.user.EtingModelValue;
 import org.springframework.stereotype.Component;
 
 import java.util.regex.Matcher;

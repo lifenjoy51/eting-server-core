@@ -4,10 +4,13 @@ import me.eting.common.domain.EtingKey;
 import me.eting.common.domain.EtingLang;
 import me.eting.common.domain.EtingType;
 import me.eting.common.domain.story.Story;
+import me.eting.server.model.service.ModelService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.context.annotation.AnnotatedBeanDefinitionReader;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -33,7 +36,7 @@ public class PostboxRegistry {
     private Map<Long, Postbox> storyIndex;
 
     @Autowired
-    private ApplicationContext context;
+    private AnnotationConfigApplicationContext context;
 
     /**
      */
@@ -61,7 +64,8 @@ public class PostboxRegistry {
                 switch (etingType) {
 
                     case NORMAL:
-                        postbox = new EtingModelPostbox(this);
+                        ModelService modelService = context.getBean(ModelService.class);
+                        postbox = new EtingModelPostbox(this, modelService);
                         break;
 
                     case REPORTED:
@@ -96,6 +100,7 @@ public class PostboxRegistry {
 
                 //bean 등록.
                 String beanName = etingLang.name().concat(etingType.name()).concat("Postbox");
+
                 if (postbox != null)
                     beanFactory.registerSingleton(beanName, postbox);
 
@@ -133,6 +138,9 @@ public class PostboxRegistry {
      */
     public void removeStory(Story story) {
         Postbox postbox = storyIndex.get(story.getId());
+        //지울 이야기가 없을 떄. 에러나니까 그냥 리턴.
+        if(postbox == null) return;
+        storyIndex.remove(story.getId());
         postbox.remove(story);
     }
 

@@ -6,6 +6,7 @@ import me.eting.common.domain.user.Incognito;
 import me.eting.server.core.service.reply.check.ReplyChecker;
 import me.eting.server.core.service.reply.check.ReplyCheckerRegistry;
 import me.eting.server.model.domain.EtingModelSource;
+import me.eting.server.model.domain.ModelType;
 import me.eting.server.model.service.EtingModelService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -21,7 +22,7 @@ public class MoodModelService extends EtingModelService {
 
     @Autowired
     private ReplyCheckerRegistry replyCheckerRegistry;
-
+    
     @Override
     public void process(EtingModelSource etingModelSource) {
         // Incognito

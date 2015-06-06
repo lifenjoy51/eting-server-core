@@ -14,14 +14,14 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "mood_model")
 public class MoodModel extends BaseModel {
-    
+
     private int positive;
     private int negative;
-    
-    
-    public MoodModel(Incognito incognito){
+
+    public MoodModel() {
+    }
+
+    public MoodModel(Incognito incognito) {
         this.setIncognitoId(incognito.getId());
     }
-    
-    
 }

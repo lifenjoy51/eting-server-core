@@ -8,12 +8,16 @@ import me.eting.server.core.service.reply.check.ReplyChecker;
 import me.eting.server.core.service.reply.check.ReplyCheckerRegistry;
 import me.eting.server.core.service.reply.push.PushService;
 import me.eting.server.core.service.reply.push.PushServiceRegistry;
+import me.eting.server.core.service.story.postbox.PostboxService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Component;
 
 /**
  * Created by lifenjoy51 on 2015-02-28.
  */
+@Component
 public class QueuedReplyConsumer {
 
     @Autowired
@@ -31,12 +35,16 @@ public class QueuedReplyConsumer {
     @Autowired
     PushServiceRegistry pushServiceRegistry;
 
+    @Autowired
+    @Qualifier("PostboxServiceImpl")
+    PostboxService postboxService;
+
     /**
      * 주기적으로 ReplyQueue에 쌓인 이야기들을 불러와 작업한다.
      * <div>언어에 맞는 분류기에서 이야기를 분류하고 편지봉투로 감싼다.</div>
      * <div>편지봉투에 넣은 이야기를 분배기에게 넘겨준다.</div>
      */
-    @Scheduled(fixedDelay = 1000) //queue가 비어있다면 잠시 쉰다.
+    //@Scheduled(fixedDelay = 1000) //queue가 비어있다면 잠시 쉰다.
     public void consumes() {
         Reply reply = null;
         while ((reply = replyQueue.poll()) != null) {
@@ -53,6 +61,8 @@ public class QueuedReplyConsumer {
                 //작성자에게 푸쉬메세지 보내기.
                 PushService pushService = pushServiceRegistry.getChecker(reply.getIncognito());
                 pushService.push(reply);
+                //정상적으로 전송한 답글은 삭제한다.
+                postboxService.removeStory(reply.getExchangedStory().getStory());
             }else{
                 reply.setReplyStatus(ReplyStatus.Abnormal);
                 replyRepository.save(reply);

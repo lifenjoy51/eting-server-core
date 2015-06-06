@@ -47,8 +47,8 @@ public class ExchangedStory
     /**
      * 어떤 이야기를 누가 받아갔는가. 
      */
-    public ExchangedStory(Story story, Incognito receiver) {
-        this.id = EtingUtil.generatedId(receiver.getId());    //타임스탬프 + 아이디.
+    public ExchangedStory(Story story, Incognito incognito) {
+        this.id = EtingUtil.generatedId(incognito.getId());    //타임스탬프 + 아이디.
         this.story = story;
         this.incognito = incognito;
     }

@@ -15,7 +15,7 @@ import javax.persistence.MappedSuperclass;
 public abstract class BaseModel {
 
     @Id
-    protected int incognitoId;
+    protected Integer incognitoId;
 
     @Column
     protected Integer value;
