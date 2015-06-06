@@ -2,6 +2,7 @@ package me.eting.server.core;
 
 import me.eting.common.util.EtingUtil;
 import me.eting.common.util.TestUtil;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -16,7 +17,9 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 
 import java.util.Date;
+import java.util.UUID;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -39,9 +42,19 @@ public class EtingRestApiTest {
 
         mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext)
                 .build();
+
+        try {
+            testRegistration(); //1
+            testRegistration(); //2
+            testSaveStory();    //1
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 
-    @Test
+    //@Test
     @Transactional
     public void testRegistration() throws Exception {
 
@@ -50,8 +63,8 @@ public class EtingRestApiTest {
         String dt = String.valueOf(new Date().getTime());
 
         String result = mockMvc.perform(post("/api/v1/device")
-                        .param("uuid", "16b72c7c-6d8d-471d-9615-bb06d40ea748")
-                        .param("pushKey", "APA91bFrp1f8U1WfpB62vCVDX3qEv8SThBGng5yfpQwM3jk9pLuSijjMPpejp-1MSSulynAYjjwWkrTHxueS0MH8bMWRf4kIQcMLtW8LHKrH76MachQs_OL7AEE2c-PR0VmnIvnctfZXkTplxj69I0LuEBYB5Ch2vg")
+                        .param("uuid", UUID.randomUUID().toString())
+                        .param("pushKey", RandomStringUtils.randomAscii(160))
                         .param("ts", dt)
                         .param("os", "Android")
                         .param("lang", "koKR")
@@ -65,7 +78,7 @@ public class EtingRestApiTest {
 
     }
 
-    @Test
+    //@Test
     @Transactional
     public void testSaveStory() throws Exception {
 
@@ -77,6 +90,29 @@ public class EtingRestApiTest {
         String result = mockMvc.perform(post("/api/v1/story")
                         .param("id", String.valueOf(storyId))
                         .param("content", content)
+        )
+                .andExpect(status().isOk())
+                        //.andExpect(content().contentType(MediaType.ALL))
+                        //.andExpect(jsonPath("$uuid", is("16b72c7c-6d8d-471d-9615-bb06d40ea748")))
+                .andReturn().getResponse().getContentAsString();
+
+        System.err.println(result);
+
+    }
+
+    @Test
+    @Transactional
+    public void testGetStory() throws Exception {
+
+        System.err.println(new Date().toString());
+
+        String content = TestUtil.randomStoryText();
+        long storyId = EtingUtil.generatedId(1);
+
+        mockMvc.perform(get("/api/test"));
+
+        String result = mockMvc.perform(get("/api/v1/story/random")
+                        .param("incognitoId", String.valueOf(2))
         )
                 .andExpect(status().isOk())
                         //.andExpect(content().contentType(MediaType.ALL))

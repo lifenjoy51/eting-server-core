@@ -1,11 +1,14 @@
 package me.eting.server.core.controller;
 
 import me.eting.common.domain.EtingLang;
+import me.eting.common.domain.story.ExchangedStory;
 import me.eting.common.domain.story.Story;
 import me.eting.common.domain.user.Device;
 import me.eting.common.domain.user.Incognito;
 import me.eting.server.core.dto.DeviceDto;
+import me.eting.server.core.dto.ExchangedStoryDto;
 import me.eting.server.core.dto.StoryDto;
+import me.eting.server.core.service.story.StoryQueueConsumer;
 import me.eting.server.core.service.story.StoryService;
 import me.eting.server.core.service.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,12 +29,19 @@ public class EtingRestController {
     
     @Autowired
     StoryService storyService;
+    
+    @Autowired
+    StoryQueueConsumer storyQueueConsumer;
 
     @RequestMapping("/test")
     @ResponseBody
     public int test() {
+        storyQueueConsumer.handleStories();
         return 1234;
     }
+
+
+    
 
     //POST    /device/uuid&os
     @RequestMapping(value = "/v1/device", method = RequestMethod.POST)
@@ -76,6 +86,31 @@ public class EtingRestController {
         }catch (IllegalArgumentException iae){
             //이넘 타입이 제대로 맞지 않을 때.
             return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
+        }
+    }
+    
+    //GET /story/random?deviceId
+    @RequestMapping(value = "/v1/story/random", method = RequestMethod.GET)
+    @ResponseBody
+    public ResponseEntity<ExchangedStoryDto> getRandomStory(
+            @RequestParam(value = "incognitoId", required = true) int incognitoId
+    ) {
+        try {
+            //incognito 정보를 불러온다.
+            Incognito incognito = userService.get(incognitoId);
+            
+            
+            ExchangedStory exchangedStory = storyService.exchange(incognito);
+            System.out.println(exchangedStory);
+            ExchangedStoryDto dto = new ExchangedStoryDto(exchangedStory);
+            return new ResponseEntity<ExchangedStoryDto>(dto, HttpStatus.OK);  //id를 리턴.
+
+        }catch (NumberFormatException nfe){
+            //디바이스 시간이 제대로 들어오지 않을 경우. 에러처리 필요함!
+            return new ResponseEntity<ExchangedStoryDto>(HttpStatus.BAD_REQUEST);
+        }catch (IllegalArgumentException iae){
+            //이넘 타입이 제대로 맞지 않을 때.
+            return new ResponseEntity<ExchangedStoryDto>(HttpStatus.BAD_REQUEST);
         }
     }
     
