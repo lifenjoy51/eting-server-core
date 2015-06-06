@@ -36,7 +36,7 @@ public class PostboxRegistry {
     private Map<Long, Postbox> storyIndex;
 
     @Autowired
-    private AnnotationConfigApplicationContext context;
+    private ConfigurableApplicationContext context;
 
     /**
      */

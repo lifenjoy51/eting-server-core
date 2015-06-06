@@ -164,6 +164,8 @@ public class MoodModelService extends EtingModelService {
     @Override
     public int value(Incognito incognito) {
         MoodModel moodModel = moodModelRepository.findOne(incognito.getId());
+        // TODO 분위기 모델 기본값이 없을 때에 어떻게 처리할것인가?
+        if(moodModel == null) return 0;
         int value = moodModel.getValue();
         return value;
     }

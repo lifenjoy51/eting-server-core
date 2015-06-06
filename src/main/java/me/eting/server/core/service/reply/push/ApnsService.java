@@ -60,7 +60,7 @@ public class ApnsService extends PushService {
         } catch (CertificateException e) {
             e.printStackTrace();
         } catch (IOException e) {
-            e.printStackTrace();
+            //TODO e.printStackTrace();
         }
 
         try {

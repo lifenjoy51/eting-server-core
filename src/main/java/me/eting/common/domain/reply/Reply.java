@@ -4,6 +4,7 @@ import lombok.Data;
 import me.eting.common.domain.story.ExchangedStory;
 import me.eting.common.domain.user.Incognito;
 import me.eting.common.util.EtingUtil;
+import me.eting.server.core.dto.ReplyDto;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -66,6 +67,7 @@ public class Reply
 	public Reply(){
         
         emoticon = new ArrayList<Emoticon>();
+        replyStatus = ReplyStatus.Normal;
         
 	}
     
@@ -76,4 +78,11 @@ public class Reply
         this.incognito = exchangedStory.getIncognito();
     }
 
+    public Reply(ExchangedStory exchangedStory, ReplyDto replyDto) {
+        this(exchangedStory);
+        this.setContent(replyDto.getContent());
+        //TODO 이모티콘 설정문제...
+        //문자열로 받아온 이모티콘을 넣어야한다.
+        this.getEmoticon().add(Emoticon.FINE);  //임시로.
+    }
 }

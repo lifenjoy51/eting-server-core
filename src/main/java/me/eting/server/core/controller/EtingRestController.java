@@ -1,13 +1,16 @@
 package me.eting.server.core.controller;
 
 import me.eting.common.domain.EtingLang;
+import me.eting.common.domain.reply.Reply;
 import me.eting.common.domain.story.ExchangedStory;
 import me.eting.common.domain.story.Story;
 import me.eting.common.domain.user.Device;
 import me.eting.common.domain.user.Incognito;
 import me.eting.server.core.dto.DeviceDto;
 import me.eting.server.core.dto.ExchangedStoryDto;
+import me.eting.server.core.dto.ReplyDto;
 import me.eting.server.core.dto.StoryDto;
+import me.eting.server.core.service.reply.ReplyService;
 import me.eting.server.core.service.story.StoryQueueConsumer;
 import me.eting.server.core.service.story.StoryService;
 import me.eting.server.core.service.user.UserService;
@@ -32,6 +35,9 @@ public class EtingRestController {
     
     @Autowired
     StoryQueueConsumer storyQueueConsumer;
+
+    @Autowired
+    ReplyService replyService;
 
     @RequestMapping("/test")
     @ResponseBody
@@ -90,7 +96,8 @@ public class EtingRestController {
     }
     
     //GET /story/random?deviceId
-    @RequestMapping(value = "/v1/story/random", method = RequestMethod.GET)
+    //GET /exchange?incognitoId
+    @RequestMapping(value = "/v1/exchange/story", method = RequestMethod.GET)
     @ResponseBody
     public ResponseEntity<ExchangedStoryDto> getRandomStory(
             @RequestParam(value = "incognitoId", required = true) int incognitoId
@@ -113,6 +120,34 @@ public class EtingRestController {
             return new ResponseEntity<ExchangedStoryDto>(HttpStatus.BAD_REQUEST);
         }
     }
+
+    //POST    /exchange/{exchangeId}/reply?exchangedId,
+    @RequestMapping(value = "/v1/exchange/{exchangeId}/reply", method = RequestMethod.POST)
+    @ResponseBody
+    public ResponseEntity<String> saveReply(
+            @ModelAttribute ReplyDto replyDto,
+            @PathVariable("exchangeId") String exchangeIdString
+    ) {
+       try {
+            //exhanged story.
+           long exchangeId = Long.parseLong(exchangeIdString);
+           ExchangedStory exchangedStory = storyService.getExchangedStory(exchangeId);
+
+            Reply reply = new Reply(exchangedStory, replyDto);
+           System.out.println(reply);
+            Reply savedReply = replyService.save(reply);
+            String replyId = String.valueOf(savedReply.getId());
+            return new ResponseEntity<String>(replyId, HttpStatus.OK);  //id를 리턴.
+
+        }catch (NumberFormatException nfe){
+            //디바이스 시간이 제대로 들어오지 않을 경우. 에러처리 필요함!
+            return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
+        }catch (IllegalArgumentException iae){
+            //이넘 타입이 제대로 맞지 않을 때.
+            return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
     
     
     
@@ -120,7 +155,7 @@ public class EtingRestController {
 
     /*
      
-    POST    /exchange/{exchangeId}/reply
+
     POST    /exchange/{exchangeId}/report
     POST    /exchange/{exchangeId}/pass
     

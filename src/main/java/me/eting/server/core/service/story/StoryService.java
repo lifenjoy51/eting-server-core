@@ -63,6 +63,16 @@ public class StoryService {
     }
 
     /**
+     * 교환한 이야기 정보를 받아온다.
+     * @param exchangedStoryId
+     * @return
+     */
+    public ExchangedStory getExchangedStory(long exchangedStoryId){
+        ExchangedStory exchangedStory = exchangedStoryRepository.findOne(exchangedStoryId);
+        return exchangedStory;
+    }
+
+    /**
      * 받은 이야기를 패스한다. 
      * @param exchangedStory
      */
