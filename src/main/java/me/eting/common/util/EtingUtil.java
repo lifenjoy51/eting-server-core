@@ -33,4 +33,19 @@ public class EtingUtil {
     public static long timestamp() {
         return new Date().getTime() / 1000;
     }
+
+    public static Date str2date(String str) throws NumberFormatException {
+        long timestamp = Long.parseLong(str);
+        return new Date(timestamp);
+    }
+    
+    public static void main(String[] args){
+        long sId = EtingUtil.generatedId(1);
+        String storyId = String.valueOf(sId);
+        System.out.println(sId);
+        System.out.println(storyId.substring(0,8));
+        System.out.println(storyId.substring(8,17));
+        
+    }   
+    
 }

@@ -2,6 +2,7 @@ package me.eting.common.domain.story;
 import lombok.Data;
 import me.eting.common.domain.user.Device;
 import me.eting.common.domain.user.Incognito;
+import me.eting.server.core.dto.StoryDto;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -51,5 +52,10 @@ public class Story
 		super();
 	}
 
+    public Story(StoryDto storyDto, Incognito incognito) {
+        this.setId(storyDto.getId());
+        this.setContent(storyDto.getContent());
+        this.setIncognito(incognito);
+    }
 }
 

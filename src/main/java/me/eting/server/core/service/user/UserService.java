@@ -47,5 +47,9 @@ public class UserService {
         //반환.
         return incognito;
     }
+    
+    public Incognito get(int id){
+        return incognitoRepository.findOne(id);
+    }
 
 }

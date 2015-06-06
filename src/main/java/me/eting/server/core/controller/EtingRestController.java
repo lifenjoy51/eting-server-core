@@ -1,20 +1,126 @@
 package me.eting.server.core.controller;
 
-import me.eting.common.domain.user.User;
+import me.eting.common.domain.EtingLang;
+import me.eting.common.domain.story.Story;
+import me.eting.common.domain.user.Device;
+import me.eting.common.domain.user.Incognito;
+import me.eting.server.core.dto.DeviceDto;
+import me.eting.server.core.dto.StoryDto;
+import me.eting.server.core.service.story.StoryService;
+import me.eting.server.core.service.user.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * Created by lifenjoy51 on 2015-03-04.
  */
 @Controller
+@RequestMapping("/api")
 public class EtingRestController {
+
+    @Autowired
+    UserService userService;
     
+    @Autowired
+    StoryService storyService;
+
     @RequestMapping("/test")
     @ResponseBody
-    public int test(){
+    public int test() {
         return 1234;
     }
+
+    //POST    /device/uuid&os
+    @RequestMapping(value = "/v1/device", method = RequestMethod.POST)
+    @ResponseBody
+    public ResponseEntity<String> deviceRegistration(
+            @ModelAttribute DeviceDto deviceDto,
+            @RequestParam(value = "lang", required = false, defaultValue = "basic") String lang
+    ) {
+        try {
+            Device device = new Device(deviceDto);
+            Incognito incognito = userService.register(device, EtingLang.valueOf(lang));
+            String incognitoId = String.valueOf(incognito.getId());
+            return new ResponseEntity<String>(incognitoId, HttpStatus.OK);  //id를 리턴.
+        }catch (NumberFormatException nfe){
+            //디바이스 시간이 제대로 들어오지 않을 경우. 에러처리 필요함!
+            return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
+        }catch (IllegalArgumentException iae){
+            //이넘 타입이 제대로 맞지 않을 때.
+            return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
+        }
+    }
     
+    
+    //POST    /story?deviceId&storyId&storyContent&StoryDt
+    @RequestMapping(value = "/v1/story", method = RequestMethod.POST)
+    @ResponseBody
+    public ResponseEntity<String> newStory(
+            @ModelAttribute StoryDto storyDto
+    ) {
+        try {
+            //incognito 정보를 불러온다.
+            Incognito incognito = userService.get(storyDto.getIncognitoId());
+            Story story = new Story(storyDto, incognito);
+
+            Story savedStory = storyService.save(story);
+            String storyId = String.valueOf(savedStory.getId());
+            return new ResponseEntity<String>(storyId, HttpStatus.OK);  //id를 리턴.
+            
+        }catch (NumberFormatException nfe){
+            //디바이스 시간이 제대로 들어오지 않을 경우. 에러처리 필요함!
+            return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
+        }catch (IllegalArgumentException iae){
+            //이넘 타입이 제대로 맞지 않을 때.
+            return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
+        }
+    }
+    
+    
+    
+
+
+    /*
+     
+    POST    /exchange/{exchangeId}/reply
+    POST    /exchange/{exchangeId}/report
+    POST    /exchange/{exchangeId}/pass
+    
+    POST    /ad/{adId}/reply?deviceId&replyContent
+    POST    /adminMsg/{adminMsgId}/reply?deviceId&replyContent
+    
+    PUT /device/{deviceId}/gender
+    PUT /device/{deviceId}/age
+    
+    POST    /user?deviceId
+    GET /user/{userId}/sync
+    
+    POST    /story/{storyId}/favorite
+    DEL /story/{storyId}/favorite
+    
+    DEL /story/{storyId}
+    DEL /exchange/{exchangeId}/reply
+    PUT /exchange/{exchangeId}/report
+    
+    POST    /reply/{replyId}/favorite
+    DEL /reply/{replyId}/favorite
+    
+    DEL /reply/{replyId}
+    
+    
+    
+    GET /story/reply?deviceId&storyIdList
+    GET /story/{storyId}?deviceId
+    
+    
+    PUT /device/{deviceId}/pushKey
+    
+    
+
+
+     * */
+
 }

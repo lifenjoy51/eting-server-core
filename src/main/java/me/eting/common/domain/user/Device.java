@@ -2,6 +2,8 @@ package me.eting.common.domain.user;
 
 import lombok.Data;
 import me.eting.common.domain.reply.ReplyStatus;
+import me.eting.common.util.EtingUtil;
+import me.eting.server.core.dto.DeviceDto;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -44,6 +46,13 @@ public class Device {
     /**
      */
     public Device() {
+    }
+
+    public Device(DeviceDto deviceDto) throws NumberFormatException{
+        this.setUuid(deviceDto.getUuid());
+        this.setTs(EtingUtil.str2date(deviceDto.getTs()));
+        this.setOs(UserOS.valueOf(deviceDto.getOs()));
+        this.setPushKey(deviceDto.getPushKey());
     }
 
 }
