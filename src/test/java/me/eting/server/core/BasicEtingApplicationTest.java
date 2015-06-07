@@ -20,6 +20,7 @@ import me.eting.server.core.service.story.StoryService;
 import me.eting.server.core.service.story.postbox.Postbox;
 import me.eting.server.core.service.story.postbox.PostboxRegistry;
 import me.eting.server.core.service.user.UserService;
+import me.eting.server.core.util.NoAvailableStoryException;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.Before;
 import org.junit.Test;
@@ -99,7 +100,7 @@ public class BasicEtingApplicationTest {
 
     @Test
     @Transactional
-    public void testMain() throws Exception {
+    public void testMain() throws Exception, NoAvailableStoryException {
         //사용자.
         Incognito tom = users.get("tom");
         System.out.println("tom");

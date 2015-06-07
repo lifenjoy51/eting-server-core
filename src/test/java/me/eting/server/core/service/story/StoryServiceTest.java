@@ -8,6 +8,7 @@ import me.eting.common.domain.story.Story;
 import me.eting.common.domain.user.Device;
 import me.eting.common.domain.user.Incognito;
 import me.eting.server.core.service.user.UserService;
+import me.eting.server.core.util.NoAvailableStoryException;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.Before;
 import org.junit.Test;
@@ -77,7 +78,7 @@ public class StoryServiceTest {
     }
 
     @Test
-    public void testExchange() throws Exception {
+    public void testExchange() throws Exception, NoAvailableStoryException {
         //받기
         ExchangedStory s = storyService.exchange(tom);
 

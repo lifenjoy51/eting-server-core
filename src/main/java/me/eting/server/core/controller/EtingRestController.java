@@ -11,14 +11,17 @@ import me.eting.server.core.dto.ExchangedStoryDto;
 import me.eting.server.core.dto.ReplyDto;
 import me.eting.server.core.dto.StoryDto;
 import me.eting.server.core.service.reply.ReplyService;
-import me.eting.server.core.service.story.StoryQueueConsumer;
 import me.eting.server.core.service.story.StoryService;
 import me.eting.server.core.service.user.UserService;
+import me.eting.server.core.util.NoAvailableStoryException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by lifenjoy51 on 2015-03-04.
@@ -29,25 +32,13 @@ public class EtingRestController {
 
     @Autowired
     UserService userService;
-    
+
     @Autowired
     StoryService storyService;
-    
-    @Autowired
-    StoryQueueConsumer storyQueueConsumer;
 
     @Autowired
     ReplyService replyService;
 
-    @RequestMapping("/test")
-    @ResponseBody
-    public int test() {
-        storyQueueConsumer.handleStories();
-        return 1234;
-    }
-
-
-    
 
     //POST    /device/uuid&os
     @RequestMapping(value = "/v1/device", method = RequestMethod.POST)
@@ -61,16 +52,16 @@ public class EtingRestController {
             Incognito incognito = userService.register(device, EtingLang.valueOf(lang));
             String incognitoId = String.valueOf(incognito.getId());
             return new ResponseEntity<String>(incognitoId, HttpStatus.OK);  //id를 리턴.
-        }catch (NumberFormatException nfe){
+        } catch (NumberFormatException nfe) {
             //디바이스 시간이 제대로 들어오지 않을 경우. 에러처리 필요함!
             return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
-        }catch (IllegalArgumentException iae){
+        } catch (IllegalArgumentException iae) {
             //이넘 타입이 제대로 맞지 않을 때.
             return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
         }
     }
-    
-    
+
+
     //POST    /story?deviceId&storyId&storyContent&StoryDt
     @RequestMapping(value = "/v1/story", method = RequestMethod.POST)
     @ResponseBody
@@ -85,16 +76,16 @@ public class EtingRestController {
             Story savedStory = storyService.save(story);
             String storyId = String.valueOf(savedStory.getId());
             return new ResponseEntity<String>(storyId, HttpStatus.OK);  //id를 리턴.
-            
-        }catch (NumberFormatException nfe){
+
+        } catch (NumberFormatException nfe) {
             //디바이스 시간이 제대로 들어오지 않을 경우. 에러처리 필요함!
             return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
-        }catch (IllegalArgumentException iae){
+        } catch (IllegalArgumentException iae) {
             //이넘 타입이 제대로 맞지 않을 때.
             return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
         }
     }
-    
+
     //GET /story/random?deviceId
     //GET /exchange?incognitoId
     @RequestMapping(value = "/v1/exchange/story", method = RequestMethod.GET)
@@ -105,19 +96,22 @@ public class EtingRestController {
         try {
             //incognito 정보를 불러온다.
             Incognito incognito = userService.get(incognitoId);
-            
-            
+
+
             ExchangedStory exchangedStory = storyService.exchange(incognito);
             System.out.println(exchangedStory);
             ExchangedStoryDto dto = new ExchangedStoryDto(exchangedStory);
             return new ResponseEntity<ExchangedStoryDto>(dto, HttpStatus.OK);  //id를 리턴.
 
-        }catch (NumberFormatException nfe){
+        } catch (NumberFormatException nfe) {
             //디바이스 시간이 제대로 들어오지 않을 경우. 에러처리 필요함!
             return new ResponseEntity<ExchangedStoryDto>(HttpStatus.BAD_REQUEST);
-        }catch (IllegalArgumentException iae){
+        } catch (IllegalArgumentException iae) {
             //이넘 타입이 제대로 맞지 않을 때.
             return new ResponseEntity<ExchangedStoryDto>(HttpStatus.BAD_REQUEST);
+        } catch (NoAvailableStoryException nase){
+            //대기열에 이야기가 없을 때.
+            return new ResponseEntity<ExchangedStoryDto>(HttpStatus.NO_CONTENT);
         }
     }
 
@@ -128,27 +122,54 @@ public class EtingRestController {
             @ModelAttribute ReplyDto replyDto,
             @PathVariable("exchangeId") String exchangeIdString
     ) {
-       try {
+        try {
             //exhanged story.
-           long exchangeId = Long.parseLong(exchangeIdString);
-           ExchangedStory exchangedStory = storyService.getExchangedStory(exchangeId);
+            long exchangeId = Long.parseLong(exchangeIdString);
+            ExchangedStory exchangedStory = storyService.getExchangedStory(exchangeId);
 
             Reply reply = new Reply(exchangedStory, replyDto);
-           System.out.println(reply);
+            System.out.println(reply);
             Reply savedReply = replyService.save(reply);
             String replyId = String.valueOf(savedReply.getId());
             return new ResponseEntity<String>(replyId, HttpStatus.OK);  //id를 리턴.
 
-        }catch (NumberFormatException nfe){
+        } catch (NumberFormatException nfe) {
             //디바이스 시간이 제대로 들어오지 않을 경우. 에러처리 필요함!
             return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
-        }catch (IllegalArgumentException iae){
+        } catch (IllegalArgumentException iae) {
             //이넘 타입이 제대로 맞지 않을 때.
             return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
+        } catch (NoAvailableStoryException nase){
+            //대기열에 이야기가 없을 때.
+            return new ResponseEntity<String>(HttpStatus.NO_CONTENT);
         }
     }
 
-    
+    //GET /story/reply?deviceId
+    @RequestMapping(value = "/v1/story/reply", method = RequestMethod.GET)
+    @ResponseBody
+    public ResponseEntity<List<ReplyDto>> getRepliesOnMyStory(
+            @RequestParam(value = "incognitoId", required = true) int incognitoId
+    ) {
+        try {
+            //incognito 정보를 불러온다.
+            Incognito incognito = userService.get(incognitoId);
+            List<Reply> replies = replyService.findReplyOnMyStory(incognito);
+            List<ReplyDto> replyDtos = new ArrayList<ReplyDto>();
+            for (Reply r : replies) {
+                replyDtos.add(new ReplyDto(r));
+            }
+            System.out.println(replyDtos);
+            return new ResponseEntity<List<ReplyDto>>(replyDtos, HttpStatus.OK);  //id를 리턴.
+
+        } catch (NumberFormatException nfe) {
+            //디바이스 시간이 제대로 들어오지 않을 경우. 에러처리 필요함!
+            return new ResponseEntity<List<ReplyDto>>(HttpStatus.BAD_REQUEST);
+        } catch (IllegalArgumentException iae) {
+            //이넘 타입이 제대로 맞지 않을 때.
+            return new ResponseEntity<List<ReplyDto>>(HttpStatus.BAD_REQUEST);
+        }
+    }
     
     
 
@@ -182,7 +203,7 @@ public class EtingRestController {
     
     
     
-    GET /story/reply?deviceId&storyIdList
+    
     GET /story/{storyId}?deviceId
     
     

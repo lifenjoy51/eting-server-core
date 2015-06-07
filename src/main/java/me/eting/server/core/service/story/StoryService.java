@@ -6,6 +6,7 @@ import me.eting.common.domain.user.Incognito;
 import me.eting.server.core.repository.ExchangedStoryRepository;
 import me.eting.server.core.repository.StoryRepository;
 import me.eting.server.core.service.story.postbox.PostboxService;
+import me.eting.server.core.util.NoAvailableStoryException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -51,9 +52,11 @@ public class StoryService {
      * @param incognito
      * @return
      */
-    public ExchangedStory exchange(Incognito incognito){
+    public ExchangedStory exchange(Incognito incognito) throws NoAvailableStoryException {
         //이야기를 받아온다.
         Story pickedStory = postboxService.pickStory(incognito);
+        //TODO 이야기가 없을 때 어떻게 처리 할 것인가?
+        if(pickedStory == null) throw new NoAvailableStoryException();
         //교환된 이야기 생성.
         ExchangedStory exchangedStory = new ExchangedStory(pickedStory, incognito);
         //교환한 이야기 저장해야지
@@ -67,8 +70,9 @@ public class StoryService {
      * @param exchangedStoryId
      * @return
      */
-    public ExchangedStory getExchangedStory(long exchangedStoryId){
+    public ExchangedStory getExchangedStory(long exchangedStoryId) throws NoAvailableStoryException {
         ExchangedStory exchangedStory = exchangedStoryRepository.findOne(exchangedStoryId);
+        if(exchangedStory == null) throw new NoAvailableStoryException();
         return exchangedStory;
     }
 

@@ -11,6 +11,7 @@ import me.eting.server.core.TestConfig;
 import me.eting.server.core.service.story.StoryQueueConsumer;
 import me.eting.server.core.service.story.StoryService;
 import me.eting.server.core.service.user.UserService;
+import me.eting.server.core.util.NoAvailableStoryException;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.Before;
 import org.junit.Test;
@@ -51,7 +52,7 @@ public class ReplyServiceTest {
     ExchangedStory amys;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() throws Exception, NoAvailableStoryException {
         tom = registUser();   //유저를 등록한다.
         amy = registUser();
         //이야기먼저넣어놓고..
@@ -100,7 +101,7 @@ public class ReplyServiceTest {
 
     @Test
     @Transactional
-    public void testExchange() throws Exception {
+    public void testExchange() throws Exception, NoAvailableStoryException {
         //받기
         ExchangedStory toms = storyService.exchange(tom);
 

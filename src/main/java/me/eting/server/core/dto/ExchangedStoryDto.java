@@ -8,16 +8,16 @@ import me.eting.common.domain.story.ExchangedStory;
  */
 @Data
 public class ExchangedStoryDto {
-    private long id;
+    private String id;
 
-    private long storyId;
-    private long storyTs;
+    private String storyId;
+    private String storyTs;
     private String content;
 
     public ExchangedStoryDto(ExchangedStory exchangedStory) {
-        this.setId(exchangedStory.getId());
-        this.setStoryId(exchangedStory.getStory().getId());
-        this.setStoryTs(exchangedStory.getStory().getTs().getTime());
+        this.setId(String.valueOf(exchangedStory.getId()));
+        this.setStoryId(String.valueOf(exchangedStory.getStory().getId()));
+        this.setStoryTs(String.valueOf(exchangedStory.getStory().getTs().getTime()));
         this.setContent(exchangedStory.getStory().getContent());
     }
 

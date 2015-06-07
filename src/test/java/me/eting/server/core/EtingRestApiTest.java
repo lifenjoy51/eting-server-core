@@ -1,11 +1,10 @@
 package me.eting.server.core;
 
-import com.fasterxml.jackson.annotation.JsonValue;
 import me.eting.common.domain.reply.Emoticon;
 import me.eting.common.util.EtingUtil;
 import me.eting.common.util.TestUtil;
-import net.minidev.json.JSONUtil;
 import org.apache.commons.lang3.RandomStringUtils;
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.junit.Before;
@@ -38,12 +37,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class EtingRestApiTest {
 
+    String exchangedId;
     private MockMvc mockMvc;
-
     @Autowired
     private WebApplicationContext webApplicationContext;
-
-    String exchangedId;
 
     @Before
     public void setUp() {
@@ -54,19 +51,26 @@ public class EtingRestApiTest {
         mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext)
                 .build();
 
+    }
+    
+    @Test
+    public void main(){
+
+
         try {
             test01Registration(); //1
             test01Registration(); //2
             test02SaveStory();    //1
             test03Exchange();
-            
+            test04SaveReply();
+            test05checkReplyOnMyStory();
+
         } catch (Exception e) {
             e.printStackTrace();
         }
-
+        
     }
 
-    //@Test
     @Transactional
     public void test01Registration() throws Exception {
 
@@ -90,13 +94,12 @@ public class EtingRestApiTest {
 
     }
 
-    //@Test
     @Transactional
     public void test02SaveStory() throws Exception {
 
         System.out.println("testSaveStory");
         System.err.println(new Date().toString());
-        
+
         String content = TestUtil.randomStoryText();
         long storyId = EtingUtil.generatedId(1);
 
@@ -113,7 +116,6 @@ public class EtingRestApiTest {
 
     }
 
-    //@Test
     @Transactional
     public void test03Exchange() throws Exception {
 
@@ -141,14 +143,11 @@ public class EtingRestApiTest {
 
     }
 
-
-
-    @Test
     @Transactional
     public void test04SaveReply() throws Exception {
 
         System.out.println("testSaveReply");
-        System.out.println("exchangedId " +exchangedId);
+        System.out.println("exchangedId " + exchangedId);
         System.err.println(new Date().toString());
 
         String content = TestUtil.randomReplyText();
@@ -168,6 +167,30 @@ public class EtingRestApiTest {
 
     }
 
-    
-    
+
+    @Transactional
+    private void test05checkReplyOnMyStory() throws Exception {
+
+        System.out.println("test05checkReplyOnMyStory");
+        System.err.println(new Date().toString());
+
+        mockMvc.perform(get("/api/test"));
+
+        String result = mockMvc.perform(get("/api/v1/story/reply")
+                        .param("incognitoId", String.valueOf(1))
+        ).andDo(print())
+                .andExpect(status().isOk())
+                        //.andExpect(content().contentType(MediaType.ALL))
+                        //.andExpect(jsonPath("$uuid", is("16b72c7c-6d8d-471d-9615-bb06d40ea748")))
+                .andReturn().getResponse().getContentAsString();
+
+        System.err.println(result);
+
+        String exchangedJsonString = result;
+        JSONArray array = (JSONArray) new JSONParser().parse(exchangedJsonString);
+        //JSONObject obj = (JSONObject)
+        System.out.println("reply string..");
+        System.out.println(array);
+    }
+
 }
