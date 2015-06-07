@@ -6,6 +6,7 @@ import me.eting.common.domain.reply.ReplyStatus;
 import me.eting.server.core.repository.ReplyRepository;
 import me.eting.server.core.service.reply.check.ReplyChecker;
 import me.eting.server.core.service.reply.check.ReplyCheckerRegistry;
+import me.eting.server.core.service.reply.postbox.ReplyPostbox;
 import me.eting.server.core.service.reply.push.PushService;
 import me.eting.server.core.service.reply.push.PushServiceRegistry;
 import me.eting.server.core.service.story.postbox.PostboxService;
@@ -38,6 +39,9 @@ public class QueuedReplyConsumer {
     @Autowired
     @Qualifier("PostboxServiceImpl")
     PostboxService postboxService;
+    
+    @Autowired
+    ReplyPostbox replyPostbox;
 
     /**
      * 주기적으로 ReplyQueue에 쌓인 이야기들을 불러와 작업한다.
@@ -61,6 +65,8 @@ public class QueuedReplyConsumer {
                 //작성자에게 푸쉬메세지 보내기.
                 PushService pushService = pushServiceRegistry.getChecker(reply.getIncognito());
                 pushService.push(reply);
+                //답장 우체통에 집어넣기. 이야기 작성자가 가져갈때 사용한다.
+                replyPostbox.add(reply);
                 //정상적으로 전송한 답글은 삭제한다.
                 postboxService.removeStory(reply.getExchangedStory().getStory());
             }else{

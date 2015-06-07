@@ -31,6 +31,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -187,6 +188,16 @@ public class BasicEtingApplicationTest {
         exchangedStoryMap.put("$4", storyService.exchange(tom));
         monitoring("받기 tom - [tom#3, amy#4, amy#5] > amy#4 > $4");
         assertEquals(storyMap.get("#4"), exchangedStoryMap.get("$4").getStory());
+        
+        //이야기 작성자가 답글을 받는다.
+        List<Reply> replyList =  replyService.findReplyOnMyStory(tom);
+        System.out.println(replyList);
+        assertNotNull(replyList);
+        
+        //답글 수취확인.
+        replyService.confirmReceipt(replyList);
+        List<Reply> replyListAfterConfirm =  replyService.findReplyOnMyStory(tom);
+        assertEquals(replyListAfterConfirm.size(), 0);
 
         //패스 tom - $4
         //작성 ted - #6 > [tom#3, amy#4, amy#5, ted#6]
